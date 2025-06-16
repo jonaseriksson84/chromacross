@@ -1,0 +1,53 @@
+---
+interface Props {
+	puzzle: {
+		colorMap: Record<string, string>;
+	};
+	gameState: {
+		revealedLetters: string[];
+	};
+}
+
+const { puzzle, gameState } = Astro.props;
+
+function renderPaletteHTML(puzzle: Props['puzzle'], gameState: Props['gameState']) {
+	let paletteHTML =
+		'<div style="margin-bottom: 1rem; font-weight: bold;">Color Palette</div>';
+	paletteHTML +=
+		'<div style="display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center;">';
+
+	for (const [letter, color] of Object.entries(puzzle.colorMap)) {
+		const displayLetter = gameState.revealedLetters.includes(letter)
+			? letter
+			: "?";
+		paletteHTML += `
+			<div style="display: flex; align-items: center; gap: 0.25rem; font-size: 0.9rem;">
+				<div style="width: 20px; height: 20px; border-radius: 50%; background-color: ${color}; border: 1px solid #666;"></div>
+				= <span style="font-weight: bold; min-width: 15px;">${displayLetter}</span>
+			</div>
+		`;
+	}
+
+	paletteHTML += "</div>";
+	return paletteHTML;
+}
+---
+
+<div id="palette-container">
+	<Fragment set:html={renderPaletteHTML(puzzle, gameState)} />
+</div>
+
+<style>
+	#palette-container {
+		background-color: #2a2a2a;
+		border-radius: 8px;
+		padding: 1.5rem;
+		min-height: 100px;
+		border: 2px solid #3a3a3a;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+	}
+</style>

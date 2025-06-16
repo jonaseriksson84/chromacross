@@ -1,0 +1,91 @@
+---
+interface Props {
+	gameState: {
+		revealedLetters: string[];
+		incorrectGuesses: string[];
+	};
+}
+
+const { gameState } = Astro.props;
+
+function renderKeyboardHTML(gameState: Props['gameState']) {
+	const rows = [
+		["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+		["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+		["Z", "X", "C", "V", "B", "N", "M"],
+	];
+
+	let keyboardHTML = "";
+
+	for (const row of rows) {
+		keyboardHTML +=
+			'<div style="display: flex; justify-content: center; gap: 0.25rem; margin-bottom: 0.25rem;">';
+
+		for (const letter of row) {
+			let keyClass = "key";
+			if (gameState.revealedLetters.includes(letter)) {
+				keyClass += " correct";
+			} else if (gameState.incorrectGuesses.includes(letter)) {
+				keyClass += " incorrect";
+			}
+
+			keyboardHTML += `<button class="${keyClass}" data-letter="${letter}">${letter}</button>`;
+		}
+
+		keyboardHTML += "</div>";
+	}
+
+	return keyboardHTML;
+}
+---
+
+<div id="keyboard-container">
+	<Fragment set:html={renderKeyboardHTML(gameState)} />
+</div>
+
+<style>
+	#keyboard-container {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	:global(.key) {
+		background-color: #3a3a3a;
+		border: 2px solid #4a4a4a;
+		border-radius: 4px;
+		padding: 0.75rem;
+		font-size: 1rem;
+		font-weight: bold;
+		color: #ffffff;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		min-width: 40px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+	:global(.key:hover) {
+		background-color: #4a4a4a;
+		transform: scale(1.05);
+	}
+
+	:global(.key.correct) {
+		background-color: #4caf50;
+		border-color: #66bb6a;
+	}
+
+	:global(.key.incorrect) {
+		background-color: #616161;
+		border-color: #757575;
+		color: #bdbdbd;
+	}
+
+	@media (max-width: 600px) {
+		:global(.key) {
+			padding: 0.5rem;
+			font-size: 0.9rem;
+		}
+	}
+</style>
