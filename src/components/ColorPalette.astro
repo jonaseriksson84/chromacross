@@ -11,26 +11,37 @@ interface Props {
 const { puzzle, gameState } = Astro.props;
 
 function renderPaletteHTML(puzzle: Props['puzzle'], gameState: Props['gameState']) {
-	let paletteHTML = '<div class="mb-4 font-bold">Color Palette</div>';
-	paletteHTML += '<div class="flex flex-wrap gap-2 justify-center">';
-
-	for (const [letter, color] of Object.entries(puzzle.colorMap)) {
-		const displayLetter = gameState.revealedLetters.includes(letter)
-			? letter
-			: "?";
-		paletteHTML += `
-			<div class="flex items-center gap-1 text-sm">
-				<div class="w-5 h-5 rounded-full border border-gray-500" style="background-color: ${color};"></div>
-				= <span class="font-bold min-w-[15px]">${displayLetter}</span>
-			</div>
-		`;
+	const colors = Object.entries(puzzle.colorMap);
+	const totalColors = colors.length;
+	
+	// Calculate optimal rows for symmetry
+	let itemsPerRow = Math.ceil(Math.sqrt(totalColors));
+	if (totalColors <= 6) itemsPerRow = totalColors; // Single row for 6 or fewer
+	
+	let paletteHTML = '<div class="space-y-3">';
+	
+	// Split colors into rows
+	for (let i = 0; i < totalColors; i += itemsPerRow) {
+		const row = colors.slice(i, i + itemsPerRow);
+		paletteHTML += '<div class="flex gap-4 justify-center items-center">';
+		
+		for (const [letter, color] of row) {
+			const displayLetter = gameState.revealedLetters.includes(letter) ? letter : "?";
+			paletteHTML += `
+				<div class="flex items-center gap-1 text-sm">
+					<div class="w-4 h-4 rounded-full border border-gray-500" style="background-color: ${color};"></div>
+					= <span class="font-bold text-xs min-w-[12px]">${displayLetter}</span>
+				</div>
+			`;
+		}
+		paletteHTML += '</div>';
 	}
-
-	paletteHTML += "</div>";
+	
+	paletteHTML += '</div>';
 	return paletteHTML;
 }
 ---
 
-<div id="palette-container" class="bg-gray-800 rounded-lg p-6 min-h-[100px] border-2 border-gray-700 flex justify-center items-center flex-wrap gap-2">
+<div id="palette-container">
 	<Fragment set:html={renderPaletteHTML(puzzle, gameState)} />
 </div>

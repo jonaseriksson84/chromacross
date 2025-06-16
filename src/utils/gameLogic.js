@@ -161,33 +161,41 @@ export function renderPalette(puzzle, gameState) {
 
 	paletteContainer.innerHTML = "";
 
-	const title = document.createElement("div");
-	title.textContent = "Color Palette";
-	title.className = "mb-4 font-bold";
-	paletteContainer.appendChild(title);
-
+	const colors = Object.entries(puzzle.colorMap);
+	const totalColors = colors.length;
+	
+	// Calculate optimal rows for symmetry
+	let itemsPerRow = Math.ceil(Math.sqrt(totalColors));
+	if (totalColors <= 6) itemsPerRow = totalColors; // Single row for 6 or fewer
+	
 	const paletteWrapper = document.createElement("div");
-	paletteWrapper.className = "flex flex-wrap gap-2 justify-center";
+	paletteWrapper.className = "space-y-3";
+	
+	// Split colors into rows
+	for (let i = 0; i < totalColors; i += itemsPerRow) {
+		const row = colors.slice(i, i + itemsPerRow);
+		const rowDiv = document.createElement("div");
+		rowDiv.className = "flex gap-4 justify-center items-center";
+		
+		for (const [letter, color] of row) {
+			const colorItem = document.createElement("div");
+			colorItem.className = "flex items-center gap-1 text-sm";
 
-	for (const [letter, color] of Object.entries(puzzle.colorMap)) {
-		const colorItem = document.createElement("div");
-		colorItem.className = "flex items-center gap-1 text-sm";
+			const colorCircle = document.createElement("div");
+			colorCircle.className = "w-4 h-4 rounded-full border border-gray-500";
+			colorCircle.style.backgroundColor = color;
 
-		const colorCircle = document.createElement("div");
-		colorCircle.className = "w-5 h-5 rounded-full border border-gray-500";
-		colorCircle.style.backgroundColor = color;
+			const letterSpan = document.createElement("span");
+			letterSpan.textContent = gameState.revealedLetters.includes(letter) ? letter : "?";
+			letterSpan.className = "font-bold text-xs min-w-[12px]";
 
-		const letterSpan = document.createElement("span");
-		letterSpan.textContent = gameState.revealedLetters.includes(letter)
-			? letter
-			: "?";
-		letterSpan.className = "font-bold min-w-[15px]";
+			colorItem.appendChild(colorCircle);
+			colorItem.appendChild(document.createTextNode(" = "));
+			colorItem.appendChild(letterSpan);
 
-		colorItem.appendChild(colorCircle);
-		colorItem.appendChild(document.createTextNode(" = "));
-		colorItem.appendChild(letterSpan);
-
-		paletteWrapper.appendChild(colorItem);
+			rowDiv.appendChild(colorItem);
+		}
+		paletteWrapper.appendChild(rowDiv);
 	}
 
 	paletteContainer.appendChild(paletteWrapper);

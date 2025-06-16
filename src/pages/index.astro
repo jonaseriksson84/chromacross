@@ -47,14 +47,15 @@ const gameState = {
 				<h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-red-400 via-accent-blue via-blue-400 to-green-400 bg-clip-text text-transparent md:text-3xl">ChromaCross</h1>
 			</header>
 
-			<div id="game-info" class="text-center mb-4 text-lg">
-				<div id="guess-counter" class="bg-gray-800 border-2 border-gray-700 rounded-lg px-4 py-3 inline-block">
+			<GameGrid puzzle={puzzle} gameState={gameState} />
+			
+			<div class="bg-gray-800 rounded-lg p-4 border-2 border-gray-700">
+				<div id="guess-counter" class="text-center text-lg">
 					Remaining guesses: <span id="remaining-count" class="font-bold text-blue-400">6</span>
 				</div>
+				<div class="border-t border-gray-600 my-3"></div>
+				<ColorPalette puzzle={puzzle} gameState={gameState} />
 			</div>
-
-			<GameGrid puzzle={puzzle} gameState={gameState} />
-			<ColorPalette puzzle={puzzle} gameState={gameState} />
 			<VirtualKeyboard gameState={gameState} />
 			<GameModals />
 		</div>

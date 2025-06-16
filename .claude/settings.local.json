@@ -6,7 +6,8 @@
       "Bash(true)",
       "Bash(rmdir:*)",
       "Bash(npm install:*)",
-      "Bash(npx astro add:*)"
+      "Bash(npx astro add:*)",
+      "Bash(git commit:*)"
     ],
     "deny": []
   }
