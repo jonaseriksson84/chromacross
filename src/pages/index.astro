@@ -3,6 +3,7 @@ import GameGrid from '../components/GameGrid.astro';
 import ColorPalette from '../components/ColorPalette.astro';
 import VirtualKeyboard from '../components/VirtualKeyboard.astro';
 import GameModals from '../components/GameModals.astro';
+import '../styles/global.css';
 
 // A hardcoded puzzle for development
 const puzzle = {
@@ -40,15 +41,15 @@ const gameState = {
 		<meta name="generator" content={Astro.generator} />
 		<title>ChromaCross</title>
 	</head>
-	<body>
-		<div id="game-container">
+	<body class="bg-gray-900 text-white min-h-screen flex justify-center items-center p-5">
+		<div id="game-container" class="max-w-lg w-full flex flex-col gap-8 text-center">
 			<header>
-				<h1>ChromaCross</h1>
+				<h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-red-400 via-accent-blue via-blue-400 to-green-400 bg-clip-text text-transparent md:text-3xl">ChromaCross</h1>
 			</header>
 
-			<div id="game-info">
-				<div id="guess-counter">
-					Remaining guesses: <span id="remaining-count">6</span>
+			<div id="game-info" class="text-center mb-4 text-lg">
+				<div id="guess-counter" class="bg-gray-800 border-2 border-gray-700 rounded-lg px-4 py-3 inline-block">
+					Remaining guesses: <span id="remaining-count" class="font-bold text-blue-400">6</span>
 				</div>
 			</div>
 
@@ -158,89 +159,3 @@ const gameState = {
 		</script>
 	</body>
 </html>
-
-<style>
-	* {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-	}
-
-	body {
-		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-			Ubuntu, Cantarell, sans-serif;
-		background-color: #1a1a1a;
-		color: #ffffff;
-		min-height: 100vh;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		padding: 20px;
-	}
-
-	#game-container {
-		max-width: 500px;
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		gap: 2rem;
-		text-align: center;
-	}
-
-	header h1 {
-		font-size: 2.5rem;
-		font-weight: bold;
-		margin-bottom: 1rem;
-		background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
-	}
-
-	#game-info {
-		text-align: center;
-		margin-bottom: 1rem;
-		font-size: 1.1rem;
-	}
-
-	#guess-counter {
-		background-color: #2a2a2a;
-		border: 2px solid #3a3a3a;
-		border-radius: 8px;
-		padding: 0.75rem 1rem;
-		display: inline-block;
-	}
-
-	#remaining-count {
-		font-weight: bold;
-		color: #4ecdc4;
-	}
-
-	#remaining-count.warning {
-		color: #ff6b6b;
-	}
-
-	@keyframes shake {
-		0%,
-		100% {
-			transform: translateX(0);
-		}
-		25% {
-			transform: translateX(-5px);
-		}
-		75% {
-			transform: translateX(5px);
-		}
-	}
-
-	@media (max-width: 600px) {
-		#game-container {
-			max-width: 100%;
-			gap: 1.5rem;
-		}
-
-		header h1 {
-			font-size: 2rem;
-		}
-	}
-</style>

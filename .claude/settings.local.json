@@ -4,7 +4,9 @@
       "Bash(npm create:*)",
       "Bash(mv:*)",
       "Bash(true)",
-      "Bash(rmdir:*)"
+      "Bash(rmdir:*)",
+      "Bash(npm install:*)",
+      "Bash(npx astro add:*)"
     ],
     "deny": []
   }

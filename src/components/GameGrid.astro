@@ -28,7 +28,7 @@ function renderGridHTML(
 	const gridWidth = horizontal.length;
 	const gridHeight = vertical.length;
 
-	let gridHTML = `<div class="puzzle-grid" style="display: grid; grid-template-columns: repeat(${gridWidth}, 1fr); gap: 2px;">`;
+	let gridHTML = `<div class="grid gap-0.5" style="grid-template-columns: repeat(${gridWidth}, 1fr);">`;
 
 	for (let row = 0; row < gridHeight; row++) {
 		for (let col = 0; col < gridWidth; col++) {
@@ -49,10 +49,9 @@ function renderGridHTML(
 			if (!isEmpty && letter) {
 				const color = puzzle.colorMap[letter];
 				const showLetter = gameState.revealedLetters.includes(letter);
-				gridHTML += `<div class="grid-cell" style="background-color: ${color}; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; border: 2px solid #4a4a4a; font-size: 1.2rem; font-weight: bold; color: #ffffff;">${showLetter ? letter : "&nbsp;"}</div>`;
+				gridHTML += `<div class="w-10 h-10 flex items-center justify-center border-2 border-gray-600 text-xl font-bold text-white md:w-9 md:h-9 md:text-base" style="background-color: ${color};">${showLetter ? letter : "&nbsp;"}</div>`;
 			} else {
-				gridHTML +=
-					'<div class="grid-cell" style="background-color: transparent; border: none; width: 40px; height: 40px;"></div>';
+				gridHTML += '<div class="w-10 h-10 md:w-9 md:h-9"></div>';
 			}
 		}
 	}
@@ -62,39 +61,6 @@ function renderGridHTML(
 }
 ---
 
-<div id="grid-container">
+<div id="grid-container" class="bg-gray-800 rounded-lg p-6 min-h-[200px] flex justify-center items-center border-2 border-gray-700">
 	<Fragment set:html={renderGridHTML(puzzle, gameState)} />
 </div>
-
-<style>
-	#grid-container {
-		background-color: #2a2a2a;
-		border-radius: 8px;
-		padding: 1.5rem;
-		min-height: 200px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		border: 2px solid #3a3a3a;
-	}
-
-	:global(.grid-cell) {
-		width: 40px;
-		height: 40px;
-		border: 2px solid #4a4a4a;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		font-size: 1.2rem;
-		font-weight: bold;
-		background-color: #3a3a3a;
-	}
-
-	@media (max-width: 600px) {
-		:global(.grid-cell) {
-			width: 35px;
-			height: 35px;
-			font-size: 1rem;
-		}
-	}
-</style>

@@ -115,16 +115,13 @@ export function renderGrid(puzzle, gameState) {
 	const gridHeight = vertical.length;
 
 	const grid = document.createElement("div");
-	grid.className = "puzzle-grid";
-	grid.style.display = "grid";
+	grid.className = "grid gap-0.5";
 	grid.style.gridTemplateColumns = `repeat(${gridWidth}, 1fr)`;
-	grid.style.gap = "2px";
 
 	for (let row = 0; row < gridHeight; row++) {
 		for (let col = 0; col < gridWidth; col++) {
 			const cell = document.createElement("div");
-			cell.className = "grid-cell";
-
+			
 			let letter = null;
 			let isEmpty = true;
 
@@ -137,16 +134,8 @@ export function renderGrid(puzzle, gameState) {
 			}
 
 			if (!isEmpty && letter) {
+				cell.className = "w-10 h-10 flex items-center justify-center border-2 border-gray-600 text-xl font-bold text-white md:w-9 md:h-9 md:text-base";
 				cell.style.backgroundColor = puzzle.colorMap[letter];
-				cell.style.width = "40px";
-				cell.style.height = "40px";
-				cell.style.display = "flex";
-				cell.style.justifyContent = "center";
-				cell.style.alignItems = "center";
-				cell.style.border = "2px solid #4a4a4a";
-				cell.style.fontSize = "1.2rem";
-				cell.style.fontWeight = "bold";
-				cell.style.color = "#ffffff";
 
 				// Show letter if revealed or game is lost
 				if (
@@ -156,10 +145,7 @@ export function renderGrid(puzzle, gameState) {
 					cell.textContent = letter;
 				}
 			} else {
-				cell.style.backgroundColor = "transparent";
-				cell.style.border = "none";
-				cell.style.width = "40px";
-				cell.style.height = "40px";
+				cell.className = "w-10 h-10 md:w-9 md:h-9";
 			}
 
 			grid.appendChild(cell);
@@ -177,36 +163,25 @@ export function renderPalette(puzzle, gameState) {
 
 	const title = document.createElement("div");
 	title.textContent = "Color Palette";
-	title.style.marginBottom = "1rem";
-	title.style.fontWeight = "bold";
+	title.className = "mb-4 font-bold";
 	paletteContainer.appendChild(title);
 
 	const paletteWrapper = document.createElement("div");
-	paletteWrapper.style.display = "flex";
-	paletteWrapper.style.flexWrap = "wrap";
-	paletteWrapper.style.gap = "0.5rem";
-	paletteWrapper.style.justifyContent = "center";
+	paletteWrapper.className = "flex flex-wrap gap-2 justify-center";
 
 	for (const [letter, color] of Object.entries(puzzle.colorMap)) {
 		const colorItem = document.createElement("div");
-		colorItem.style.display = "flex";
-		colorItem.style.alignItems = "center";
-		colorItem.style.gap = "0.25rem";
-		colorItem.style.fontSize = "0.9rem";
+		colorItem.className = "flex items-center gap-1 text-sm";
 
 		const colorCircle = document.createElement("div");
-		colorCircle.style.width = "20px";
-		colorCircle.style.height = "20px";
-		colorCircle.style.borderRadius = "50%";
+		colorCircle.className = "w-5 h-5 rounded-full border border-gray-500";
 		colorCircle.style.backgroundColor = color;
-		colorCircle.style.border = "1px solid #666";
 
 		const letterSpan = document.createElement("span");
 		letterSpan.textContent = gameState.revealedLetters.includes(letter)
 			? letter
 			: "?";
-		letterSpan.style.fontWeight = "bold";
-		letterSpan.style.minWidth = "15px";
+		letterSpan.className = "font-bold min-w-[15px]";
 
 		colorItem.appendChild(colorCircle);
 		colorItem.appendChild(document.createTextNode(" = "));
@@ -232,45 +207,24 @@ export function renderKeyboard(gameState) {
 
 	for (const row of rows) {
 		const rowDiv = document.createElement("div");
-		rowDiv.style.display = "flex";
-		rowDiv.style.justifyContent = "center";
-		rowDiv.style.gap = "0.25rem";
-		rowDiv.style.marginBottom = "0.25rem";
+		rowDiv.className = "flex justify-center gap-1 mb-1";
 
 		for (const letter of row) {
 			const key = document.createElement("button");
-			key.className = "key";
 			key.textContent = letter;
 			key.dataset.letter = letter;
-
+			
+			// Base Tailwind classes
+			let keyClass = "key bg-gray-700 border-2 border-gray-600 rounded px-3 py-2 text-base font-bold text-white cursor-pointer transition-all duration-200 min-w-[40px] flex justify-center items-center hover:bg-gray-600 hover:scale-105 md:px-2 md:py-1 md:text-sm";
+			
 			// Set key state based on game state
 			if (gameState.revealedLetters.includes(letter)) {
-				key.classList.add("correct");
+				keyClass += " !bg-green-500 !border-green-400";
 			} else if (gameState.incorrectGuesses.includes(letter)) {
-				key.classList.add("incorrect");
+				keyClass += " !bg-gray-500 !border-gray-400 !text-gray-300";
 			}
-
-			// Apply styles directly to ensure visibility
-			key.style.backgroundColor = "#3a3a3a";
-			key.style.border = "2px solid #4a4a4a";
-			key.style.borderRadius = "4px";
-			key.style.padding = "0.75rem";
-			key.style.fontSize = "1rem";
-			key.style.fontWeight = "bold";
-			key.style.color = "#ffffff";
-			key.style.cursor = "pointer";
-			key.style.transition = "all 0.2s ease";
-			key.style.minWidth = "40px";
-
-			if (gameState.revealedLetters.includes(letter)) {
-				key.style.backgroundColor = "#4caf50";
-				key.style.borderColor = "#66bb6a";
-			} else if (gameState.incorrectGuesses.includes(letter)) {
-				key.style.backgroundColor = "#616161";
-				key.style.borderColor = "#757575";
-				key.style.color = "#bdbdbd";
-			}
-
+			
+			key.className = keyClass;
 			rowDiv.appendChild(key);
 		}
 
@@ -286,9 +240,11 @@ export function renderGuessCounter(gameState) {
 	remainingCountElement.textContent = remaining;
 
 	// Add warning styling when getting low
-	remainingCountElement.classList.remove("warning");
+	remainingCountElement.classList.remove("text-red-400");
+	remainingCountElement.classList.add("text-blue-400");
 	if (remaining <= 2 && remaining > 0) {
-		remainingCountElement.classList.add("warning");
+		remainingCountElement.classList.remove("text-blue-400");
+		remainingCountElement.classList.add("text-red-400");
 	}
 
 	// Hide the counter when game is over

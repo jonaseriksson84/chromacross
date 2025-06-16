@@ -3,85 +3,20 @@
 ---
 
 <!-- Win/Loss Message Modals -->
-<div id="win-message" class="modal hidden">
-	<div class="modal-content">
-		<h2>🎉 Congratulations!</h2>
-		<p>You solved today's ChromaCross!</p>
+<div id="win-message" class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 hidden">
+	<div class="bg-gray-800 rounded-xl p-8 max-w-md w-[90%] text-center border-2 border-gray-600">
+		<h2 class="mb-4 text-2xl">🎉 Congratulations!</h2>
+		<p class="mb-4 leading-relaxed">You solved today's ChromaCross!</p>
 		<div id="win-stats"></div>
-		<button id="share-button-win" class="share-button">Share Results</button>
+		<button id="share-button-win" class="bg-blue-500 text-gray-900 border-0 rounded-lg px-6 py-3 text-base font-bold cursor-pointer transition-all duration-200 mt-4 hover:bg-blue-400 hover:scale-105 active:scale-95">Share Results</button>
 	</div>
 </div>
 
-<div id="loss-message" class="modal hidden">
-	<div class="modal-content">
-		<h2>😔 Game Over</h2>
-		<p>Better luck tomorrow!</p>
+<div id="loss-message" class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 hidden">
+	<div class="bg-gray-800 rounded-xl p-8 max-w-md w-[90%] text-center border-2 border-gray-600">
+		<h2 class="mb-4 text-2xl">😔 Game Over</h2>
+		<p class="mb-4 leading-relaxed">Better luck tomorrow!</p>
 		<div id="loss-stats"></div>
-		<button id="share-button-loss" class="share-button">Share Results</button>
+		<button id="share-button-loss" class="bg-blue-500 text-gray-900 border-0 rounded-lg px-6 py-3 text-base font-bold cursor-pointer transition-all duration-200 mt-4 hover:bg-blue-400 hover:scale-105 active:scale-95">Share Results</button>
 	</div>
 </div>
-
-<style>
-	.modal {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, 0.8);
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		z-index: 1000;
-	}
-
-	.modal.hidden {
-		display: none;
-	}
-
-	.modal-content {
-		background-color: #2a2a2a;
-		border-radius: 12px;
-		padding: 2rem;
-		max-width: 400px;
-		width: 90%;
-		text-align: center;
-		border: 2px solid #4a4a4a;
-	}
-
-	.modal-content h2 {
-		margin-bottom: 1rem;
-		font-size: 1.5rem;
-	}
-
-	.modal-content p {
-		margin-bottom: 1rem;
-		line-height: 1.5;
-	}
-
-	.share-button {
-		background-color: #4ecdc4;
-		border: none;
-		border-radius: 8px;
-		padding: 0.75rem 1.5rem;
-		font-size: 1rem;
-		font-weight: bold;
-		color: #1a1a1a;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		margin-top: 1rem;
-	}
-
-	.share-button:hover {
-		background-color: #45b7d1;
-		transform: scale(1.05);
-	}
-
-	.share-button:active {
-		transform: scale(0.95);
-	}
-
-	:global(.share-button.copied) {
-		background-color: #4caf50;
-	}
-</style>

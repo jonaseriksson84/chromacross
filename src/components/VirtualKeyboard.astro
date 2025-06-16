@@ -18,15 +18,15 @@ function renderKeyboardHTML(gameState: Props['gameState']) {
 	let keyboardHTML = "";
 
 	for (const row of rows) {
-		keyboardHTML +=
-			'<div style="display: flex; justify-content: center; gap: 0.25rem; margin-bottom: 0.25rem;">';
+		keyboardHTML += '<div class="flex justify-center gap-1 mb-1">';
 
 		for (const letter of row) {
-			let keyClass = "key";
+			let keyClass = "key bg-gray-700 border-2 border-gray-600 rounded px-3 py-2 text-base font-bold text-white cursor-pointer transition-all duration-200 min-w-[40px] flex justify-center items-center hover:bg-gray-600 hover:scale-105 md:px-2 md:py-1 md:text-sm";
+			
 			if (gameState.revealedLetters.includes(letter)) {
-				keyClass += " correct";
+				keyClass += " !bg-green-500 !border-green-400";
 			} else if (gameState.incorrectGuesses.includes(letter)) {
-				keyClass += " incorrect";
+				keyClass += " !bg-gray-500 !border-gray-400 !text-gray-300";
 			}
 
 			keyboardHTML += `<button class="${keyClass}" data-letter="${letter}">${letter}</button>`;
@@ -39,53 +39,6 @@ function renderKeyboardHTML(gameState: Props['gameState']) {
 }
 ---
 
-<div id="keyboard-container">
+<div id="keyboard-container" class="flex flex-col gap-2">
 	<Fragment set:html={renderKeyboardHTML(gameState)} />
 </div>
-
-<style>
-	#keyboard-container {
-		display: flex;
-		flex-direction: column;
-		gap: 0.5rem;
-	}
-
-	:global(.key) {
-		background-color: #3a3a3a;
-		border: 2px solid #4a4a4a;
-		border-radius: 4px;
-		padding: 0.75rem;
-		font-size: 1rem;
-		font-weight: bold;
-		color: #ffffff;
-		cursor: pointer;
-		transition: all 0.2s ease;
-		min-width: 40px;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	:global(.key:hover) {
-		background-color: #4a4a4a;
-		transform: scale(1.05);
-	}
-
-	:global(.key.correct) {
-		background-color: #4caf50;
-		border-color: #66bb6a;
-	}
-
-	:global(.key.incorrect) {
-		background-color: #616161;
-		border-color: #757575;
-		color: #bdbdbd;
-	}
-
-	@media (max-width: 600px) {
-		:global(.key) {
-			padding: 0.5rem;
-			font-size: 0.9rem;
-		}
-	}
-</style>
