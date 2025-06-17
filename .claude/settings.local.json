@@ -13,7 +13,8 @@
       "Bash(mkdir:*)",
       "WebFetch(domain:gist.github.com)",
       "Bash(echo)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(pkill:*)"
     ],
     "deny": []
   }
