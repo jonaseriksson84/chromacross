@@ -10,22 +10,27 @@ interface Props {
 
 const { puzzle, gameState } = Astro.props;
 
-function renderPaletteHTML(puzzle: Props['puzzle'], gameState: Props['gameState']) {
+function renderPaletteHTML(
+	puzzle: Props["puzzle"],
+	gameState: Props["gameState"],
+) {
 	const colors = Object.entries(puzzle.colorMap);
 	const totalColors = colors.length;
-	
+
 	// Calculate optimal rows for compact layout
-	let itemsPerRow = 3; // 3 items per row for better mobile fit
-	
+	const itemsPerRow = 3; // 3 items per row for better mobile fit
+
 	let paletteHTML = '<div class="space-y-2">';
-	
+
 	// Split colors into rows
 	for (let i = 0; i < totalColors; i += itemsPerRow) {
 		const row = colors.slice(i, i + itemsPerRow);
 		paletteHTML += '<div class="flex gap-2 justify-center items-center">';
-		
+
 		for (const [letter, color] of row) {
-			const displayLetter = gameState.revealedLetters.includes(letter) ? letter : "?";
+			const displayLetter = gameState.revealedLetters.includes(letter)
+				? letter
+				: "?";
 			paletteHTML += `
 				<div class="flex items-center gap-1 text-sm">
 					<div class="w-4 h-4 rounded-full border border-gray-500" style="background-color: ${color};"></div>
@@ -33,10 +38,10 @@ function renderPaletteHTML(puzzle: Props['puzzle'], gameState: Props['gameState'
 				</div>
 			`;
 		}
-		paletteHTML += '</div>';
+		paletteHTML += "</div>";
 	}
-	
-	paletteHTML += '</div>';
+
+	paletteHTML += "</div>";
 	return paletteHTML;
 }
 ---

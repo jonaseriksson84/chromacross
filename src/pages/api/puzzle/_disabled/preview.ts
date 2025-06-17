@@ -1,5 +1,30 @@
-import fs from 'fs';
-import path from 'path';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
+
+// Type definitions
+interface Intersection {
+  word1: string;
+  word2: string;
+  letter: string;
+  word1_pos: number;
+  word2_pos: number;
+}
+
+interface PreviewPuzzle {
+  date: string;
+  words: {
+    horizontal: string;
+    vertical: string;
+  };
+  intersection: {
+    letter: string;
+    horizontalIndex: number;
+    verticalIndex: number;
+  };
+  uniqueLetters: string[];
+  letterCount: number;
+  isMiddleIntersection: boolean;
+}
 
 // Seeded random generator (same as in today.ts)
 class SeededRandom {
@@ -26,9 +51,9 @@ try {
 }
 
 // Find intersections (same logic as today.ts)
-function findIntersections(word1, wordList, preferMiddle = true) {
-  const intersections = [];
-  const middleIntersections = [];
+function findIntersections(word1: string, wordList: string[], preferMiddle = true): Intersection[] {
+  const intersections: Intersection[] = [];
+  const middleIntersections: Intersection[] = [];
   
   for (let pos1 = 0; pos1 < 5; pos1++) {
     const letter = word1[pos1];
@@ -57,7 +82,7 @@ function findIntersections(word1, wordList, preferMiddle = true) {
 }
 
 // Improved puzzle generation for preview
-function generatePreviewPuzzle(date: string) {
+function generatePreviewPuzzle(date: string): PreviewPuzzle {
   const epochDate = new Date(date).getTime() / (1000 * 60 * 60 * 24);
   const daysSinceEpoch = Math.floor(epochDate);
   const rng = new SeededRandom(daysSinceEpoch * 2654435761);
@@ -69,7 +94,7 @@ function generatePreviewPuzzle(date: string) {
     
     if (intersections.length > 0) {
       const intersection = intersections[rng.nextInt(intersections.length)];
-      const uniqueLetters = Array.from(new Set([...intersection.word1, ...intersection.word2])).sort();
+      const uniqueLetters = Array.from(new Set([...intersection.word1.split(''), ...intersection.word2.split('')])).sort();
       
       return {
         date,
@@ -93,12 +118,13 @@ function generatePreviewPuzzle(date: string) {
     words: { horizontal: "ABOUT", vertical: "BOARD" },
     intersection: { letter: "B", horizontalIndex: 1, verticalIndex: 0 },
     uniqueLetters: ["A", "B", "D", "O", "R", "T", "U"],
-    letterCount: 7
+    letterCount: 7,
+    isMiddleIntersection: true
   };
 }
 
 export async function GET() {
-  const results = [];
+  const results: PreviewPuzzle[] = [];
   const today = new Date();
   
   // Generate puzzles for next 3 months (90 days)

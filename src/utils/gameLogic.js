@@ -122,7 +122,7 @@ export function renderGrid(puzzle, gameState) {
 	for (let row = 0; row < gridHeight; row++) {
 		for (let col = 0; col < gridWidth; col++) {
 			const cell = document.createElement("div");
-			
+
 			let letter = null;
 			let isEmpty = true;
 
@@ -135,7 +135,8 @@ export function renderGrid(puzzle, gameState) {
 			}
 
 			if (!isEmpty && letter) {
-				cell.className = "aspect-square flex items-center justify-center border-2 border-gray-600 text-lg sm:text-xl font-bold text-white";
+				cell.className =
+					"aspect-square flex items-center justify-center border-2 border-gray-600 text-lg sm:text-xl font-bold text-white";
 				cell.style.backgroundColor = puzzle.colorMap[letter];
 
 				// Show letter if revealed or game is lost
@@ -164,19 +165,19 @@ export function renderPalette(puzzle, gameState) {
 
 	const colors = Object.entries(puzzle.colorMap);
 	const totalColors = colors.length;
-	
+
 	// Calculate optimal rows for compact layout
-	let itemsPerRow = 3; // 3 items per row for better mobile fit
-	
+	const itemsPerRow = 3; // 3 items per row for better mobile fit
+
 	const paletteWrapper = document.createElement("div");
 	paletteWrapper.className = "space-y-2";
-	
+
 	// Split colors into rows
 	for (let i = 0; i < totalColors; i += itemsPerRow) {
 		const row = colors.slice(i, i + itemsPerRow);
 		const rowDiv = document.createElement("div");
 		rowDiv.className = "flex gap-2 justify-center items-center";
-		
+
 		for (const [letter, color] of row) {
 			const colorItem = document.createElement("div");
 			colorItem.className = "flex items-center gap-1 text-sm";
@@ -186,7 +187,9 @@ export function renderPalette(puzzle, gameState) {
 			colorCircle.style.backgroundColor = color;
 
 			const letterSpan = document.createElement("span");
-			letterSpan.textContent = gameState.revealedLetters.includes(letter) ? letter : "?";
+			letterSpan.textContent = gameState.revealedLetters.includes(letter)
+				? letter
+				: "?";
 			letterSpan.className = "font-bold text-xs min-w-[12px]";
 
 			colorItem.appendChild(colorCircle);
@@ -221,17 +224,18 @@ export function renderKeyboard(gameState) {
 			const key = document.createElement("button");
 			key.textContent = letter;
 			key.dataset.letter = letter;
-			
+
 			// Base Tailwind classes
-			let keyClass = "key bg-gray-700 border-2 border-gray-600 rounded px-2 py-2 text-sm font-bold text-white cursor-pointer transition-all duration-200 min-w-[32px] flex justify-center items-center hover:bg-gray-600 hover:scale-105";
-			
+			let keyClass =
+				"key bg-gray-700 border-2 border-gray-600 rounded px-2 py-2 text-sm font-bold text-white cursor-pointer transition-all duration-200 min-w-[32px] flex justify-center items-center hover:bg-gray-600 hover:scale-105";
+
 			// Set key state based on game state
 			if (gameState.revealedLetters.includes(letter)) {
 				keyClass += " !bg-green-500 !border-green-400";
 			} else if (gameState.incorrectGuesses.includes(letter)) {
 				keyClass += " !bg-gray-500 !border-gray-400 !text-gray-300";
 			}
-			
+
 			key.className = keyClass;
 			rowDiv.appendChild(key);
 		}
@@ -270,14 +274,17 @@ export function renderGameStatus(puzzle, gameState) {
 	const showResultsButton = document.getElementById("show-results-button");
 
 	// Hide both modals by default and show results button for finished games
-	const isGameFinished = gameState.status === "WON" || gameState.status === "LOST";
-	
+	const isGameFinished =
+		gameState.status === "WON" || gameState.status === "LOST";
+
 	// Check if modals should be shown (not manually closed)
-	const modalWasClosed = localStorage.getItem(`chromacross-modal-closed-${gameState.puzzleId}`) === "true";
-	
+	const modalWasClosed =
+		localStorage.getItem(`chromacross-modal-closed-${gameState.puzzleId}`) ===
+		"true";
+
 	winModal.classList.add("hidden");
 	lossModal.classList.add("hidden");
-	
+
 	if (showResultsButton) {
 		if (isGameFinished && modalWasClosed) {
 			showResultsButton.classList.remove("hidden");
@@ -297,7 +304,7 @@ export function renderGameStatus(puzzle, gameState) {
 			<p><strong>Solved in ${totalGuesses} guesses!</strong></p>
 			<p>${incorrectCount} incorrect guess${incorrectCount !== 1 ? "es" : ""}</p>
 		`;
-		
+
 		// Show modal if not manually closed
 		if (!modalWasClosed) {
 			winModal.classList.remove("hidden");
@@ -314,7 +321,7 @@ export function renderGameStatus(puzzle, gameState) {
 			<p>${correctCount} correct, ${MAX_INCORRECT_GUESSES} incorrect</p>
 			<p><strong>The words were: ${puzzle.words.horizontal} / ${puzzle.words.vertical}</strong></p>
 		`;
-		
+
 		// Show modal if not manually closed
 		if (!modalWasClosed) {
 			lossModal.classList.remove("hidden");
@@ -325,12 +332,15 @@ export function renderGameStatus(puzzle, gameState) {
 export function closeModal(gameState) {
 	const winModal = document.getElementById("win-message");
 	const lossModal = document.getElementById("loss-message");
-	
+
 	winModal.classList.add("hidden");
 	lossModal.classList.add("hidden");
-	
+
 	// Remember that the modal was closed for this puzzle
-	localStorage.setItem(`chromacross-modal-closed-${gameState.puzzleId}`, "true");
+	localStorage.setItem(
+		`chromacross-modal-closed-${gameState.puzzleId}`,
+		"true",
+	);
 }
 
 export function showResultsModal(puzzle, gameState) {
