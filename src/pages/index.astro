@@ -5,28 +5,10 @@ import VirtualKeyboard from '../components/VirtualKeyboard.astro';
 import GameModals from '../components/GameModals.astro';
 import '../styles/global.css';
 
-// A hardcoded puzzle for development
-const puzzle = {
-	puzzleId: 1,
-	words: { horizontal: "WATER", vertical: "LEMON" },
-	intersection: { letter: "E", horizontalIndex: 3, verticalIndex: 1 },
-	uniqueLetters: ["W", "A", "T", "E", "R", "L", "M", "O", "N"],
-	colorMap: {
-		W: "#4a90e2",
-		A: "#7ed321",
-		T: "#f5a623",
-		E: "#bd10e0",
-		R: "#d0021b",
-		L: "#f8e71c",
-		M: "#50e3c2",
-		O: "#9013fe",
-		N: "#b8e986",
-	},
-};
-
-// The player's current state
-const gameState = {
-	puzzleId: 1,
+// Puzzle will be fetched from API
+// Initial game state - will be updated after puzzle fetch
+const initialGameState = {
+	puzzleId: 0,
 	revealedLetters: [],
 	incorrectGuesses: [],
 	status: "IN_PROGRESS",
@@ -49,16 +31,32 @@ const gameState = {
 
 			<button id="show-results-button" class="bg-blue-500 text-gray-900 border-0 rounded-lg px-6 py-3 text-base font-bold cursor-pointer transition-all duration-200 hover:bg-blue-400 hover:scale-105 active:scale-95 hidden mb-4">Puzzle Completed - Show Results</button>
 
-			<GameGrid puzzle={puzzle} gameState={gameState} />
-			
-			<div class="bg-gray-800 rounded-lg p-4 border-2 border-gray-700">
-				<div id="guess-counter" class="text-center text-lg">
-					Remaining guesses: <span id="remaining-count" class="font-bold text-blue-400">6</span>
-				</div>
-				<div class="border-t border-gray-600 my-3"></div>
-				<ColorPalette puzzle={puzzle} gameState={gameState} />
+			<div id="loading-state" class="text-center text-gray-400">
+				<p>Loading today's puzzle...</p>
 			</div>
-			<VirtualKeyboard gameState={gameState} />
+
+			<div id="error-state" class="text-center text-red-400 hidden">
+				<p>Failed to load puzzle. Please try refreshing.</p>
+			</div>
+
+			<div id="game-content" class="flex flex-col gap-6 hidden">
+				<div id="grid-container" class="bg-gray-800 rounded-lg p-4 w-full flex justify-center items-center border-2 border-gray-700">
+					<!-- Grid will be populated by JavaScript -->
+				</div>
+				
+				<div class="bg-gray-800 rounded-lg p-4 border-2 border-gray-700">
+					<div id="guess-counter" class="text-center text-lg">
+						Remaining guesses: <span id="remaining-count" class="font-bold text-blue-400">6</span>
+					</div>
+					<div class="border-t border-gray-600 my-3"></div>
+					<div id="palette-container">
+						<!-- Palette will be populated by JavaScript -->
+					</div>
+				</div>
+				<div id="keyboard-container" class="flex flex-col gap-2">
+					<!-- Keyboard will be populated by JavaScript -->
+				</div>
+			</div>
 			<GameModals />
 		</div>
 
@@ -74,46 +72,74 @@ const gameState = {
 			} from '../utils/gameLogic.js';
 			import { addShareEventListeners } from '../utils/shareUtils.js';
 
-			// Pass server-side data to client-side
-			const puzzle = {
-				puzzleId: 1,
-				words: { horizontal: "WATER", vertical: "LEMON" },
-				intersection: { letter: "E", horizontalIndex: 3, verticalIndex: 1 },
-				uniqueLetters: ["W", "A", "T", "E", "R", "L", "M", "O", "N"],
-				colorMap: {
-					W: "#4a90e2",
-					A: "#7ed321",
-					T: "#f5a623",
-					E: "#bd10e0",
-					R: "#d0021b",
-					L: "#f8e71c",
-					M: "#50e3c2",
-					O: "#9013fe",
-					N: "#b8e986",
-				},
-			};
+			// Global variables
+			let puzzle = null;
+			let gameState = null;
 
-			// The player's current state (will be reactive)
-			let gameState = {
-				puzzleId: 1,
-				revealedLetters: [],
-				incorrectGuesses: [],
-				status: "IN_PROGRESS",
-			};
+			// Fetch puzzle from API
+			async function fetchPuzzle() {
+				try {
+					console.log('Fetching puzzle from API...');
+					const response = await fetch('/api/puzzle/today');
+					if (!response.ok) {
+						throw new Error(`HTTP error! status: ${response.status}`);
+					}
+					const puzzleData = await response.json();
+					console.log('Puzzle fetched successfully:', puzzleData);
+					return puzzleData;
+				} catch (error) {
+					console.error('Failed to fetch puzzle:', error);
+					throw error;
+				}
+			}
 
-			// Add event listeners when DOM is loaded
-			document.addEventListener("DOMContentLoaded", function () {
-				// Load saved state before initializing
+			// Initialize game with puzzle data
+			function initializeGame(puzzleData) {
+				console.log('Initializing game with puzzle:', puzzleData.puzzleId);
+				puzzle = puzzleData;
+				
+				// Initialize game state
+				gameState = {
+					puzzleId: puzzle.puzzleId,
+					revealedLetters: [],
+					incorrectGuesses: [],
+					status: "IN_PROGRESS",
+				};
+
+				// Try to load saved state for this puzzle
 				const savedState = loadState(puzzle.puzzleId);
 				if (savedState) {
 					gameState = savedState;
 					console.log("Game state loaded:", gameState);
 				}
 
+				// Show game content, hide loading state
+				console.log('Showing game content...');
+				document.getElementById('loading-state').classList.add('hidden');
+				document.getElementById('game-content').classList.remove('hidden');
+
+				// Set up event listeners and render
 				addEventListeners();
 				addShareEventListeners(puzzle, gameState);
-				// Initial render to replace server-side content with client-side interactive version
 				render(puzzle, gameState);
+				console.log('Game initialized successfully!');
+			}
+
+			// Show error state
+			function showError() {
+				document.getElementById('loading-state').classList.add('hidden');
+				document.getElementById('error-state').classList.remove('hidden');
+			}
+
+			// Main initialization
+			document.addEventListener("DOMContentLoaded", async function () {
+				try {
+					const puzzleData = await fetchPuzzle();
+					initializeGame(puzzleData);
+				} catch (error) {
+					console.error('Failed to initialize game:', error);
+					showError();
+				}
 			});
 
 			function addEventListeners(): void {
