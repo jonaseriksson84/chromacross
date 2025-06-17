@@ -28,7 +28,7 @@ function renderGridHTML(
 	const gridWidth = horizontal.length;
 	const gridHeight = vertical.length;
 
-	let gridHTML = `<div class="grid gap-0.5" style="grid-template-columns: repeat(${gridWidth}, 1fr);">`;
+	let gridHTML = `<div class="grid gap-1 w-full max-w-xs mx-auto" style="grid-template-columns: repeat(${gridWidth}, 1fr); aspect-ratio: ${gridWidth}/${gridHeight};">`;
 
 	for (let row = 0; row < gridHeight; row++) {
 		for (let col = 0; col < gridWidth; col++) {
@@ -49,9 +49,9 @@ function renderGridHTML(
 			if (!isEmpty && letter) {
 				const color = puzzle.colorMap[letter];
 				const showLetter = gameState.revealedLetters.includes(letter);
-				gridHTML += `<div class="w-10 h-10 flex items-center justify-center border-2 border-gray-600 text-xl font-bold text-white md:w-9 md:h-9 md:text-base" style="background-color: ${color};">${showLetter ? letter : "&nbsp;"}</div>`;
+				gridHTML += `<div class="aspect-square flex items-center justify-center border-2 border-gray-600 text-lg sm:text-xl font-bold text-white" style="background-color: ${color};">${showLetter ? letter : "&nbsp;"}</div>`;
 			} else {
-				gridHTML += '<div class="w-10 h-10 md:w-9 md:h-9"></div>';
+				gridHTML += '<div class="aspect-square"></div>';
 			}
 		}
 	}
@@ -61,6 +61,6 @@ function renderGridHTML(
 }
 ---
 
-<div id="grid-container" class="bg-gray-800 rounded-lg p-2 w-full aspect-square flex justify-center items-center border-2 border-gray-700">
+<div id="grid-container" class="bg-gray-800 rounded-lg p-4 w-full flex justify-center items-center border-2 border-gray-700">
 	<Fragment set:html={renderGridHTML(puzzle, gameState)} />
 </div>

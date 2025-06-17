@@ -41,11 +41,13 @@ const gameState = {
 		<meta name="generator" content={Astro.generator} />
 		<title>ChromaCross</title>
 	</head>
-	<body class="bg-gray-900 text-white min-h-screen flex justify-center items-center p-5">
-		<div id="game-container" class="max-w-lg w-full flex flex-col gap-8 text-center">
+	<body class="bg-gray-900 text-white min-h-screen flex justify-center items-center p-3">
+		<div id="game-container" class="w-full max-w-sm sm:max-w-md flex flex-col gap-6 text-center">
 			<header>
 				<h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-red-400 via-accent-blue via-blue-400 to-green-400 bg-clip-text text-transparent md:text-3xl">ChromaCross</h1>
 			</header>
+
+			<button id="show-results-button" class="bg-blue-500 text-gray-900 border-0 rounded-lg px-6 py-3 text-base font-bold cursor-pointer transition-all duration-200 hover:bg-blue-400 hover:scale-105 active:scale-95 hidden mb-4">Puzzle Completed - Show Results</button>
 
 			<GameGrid puzzle={puzzle} gameState={gameState} />
 			
@@ -66,7 +68,9 @@ const gameState = {
 				saveState, 
 				loadState, 
 				render, 
-				shakeElement 
+				shakeElement,
+				closeModal,
+				showResultsModal
 			} from '../utils/gameLogic.js';
 			import { addShareEventListeners } from '../utils/shareUtils.js';
 
@@ -134,6 +138,31 @@ const gameState = {
 						handleGuessWrapper(letter);
 					}
 				});
+
+				// Add event listeners for modal close buttons
+				const closeWinModal = document.getElementById("close-win-modal");
+				const closeLossModal = document.getElementById("close-loss-modal");
+				const showResultsButton = document.getElementById("show-results-button");
+
+				if (closeWinModal) {
+					closeWinModal.addEventListener("click", function() {
+						closeModal(gameState);
+						render(puzzle, gameState);
+					});
+				}
+
+				if (closeLossModal) {
+					closeLossModal.addEventListener("click", function() {
+						closeModal(gameState);
+						render(puzzle, gameState);
+					});
+				}
+
+				if (showResultsButton) {
+					showResultsButton.addEventListener("click", function() {
+						showResultsModal(puzzle, gameState);
+					});
+				}
 			}
 
 			function handleGuessWrapper(letter: string): void {

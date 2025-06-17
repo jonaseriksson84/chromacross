@@ -14,16 +14,15 @@ function renderPaletteHTML(puzzle: Props['puzzle'], gameState: Props['gameState'
 	const colors = Object.entries(puzzle.colorMap);
 	const totalColors = colors.length;
 	
-	// Calculate optimal rows for symmetry
-	let itemsPerRow = Math.ceil(Math.sqrt(totalColors));
-	if (totalColors <= 6) itemsPerRow = totalColors; // Single row for 6 or fewer
+	// Calculate optimal rows for compact layout
+	let itemsPerRow = 3; // 3 items per row for better mobile fit
 	
-	let paletteHTML = '<div class="space-y-3">';
+	let paletteHTML = '<div class="space-y-2">';
 	
 	// Split colors into rows
 	for (let i = 0; i < totalColors; i += itemsPerRow) {
 		const row = colors.slice(i, i + itemsPerRow);
-		paletteHTML += '<div class="flex gap-4 justify-center items-center">';
+		paletteHTML += '<div class="flex gap-2 justify-center items-center">';
 		
 		for (const [letter, color] of row) {
 			const displayLetter = gameState.revealedLetters.includes(letter) ? letter : "?";

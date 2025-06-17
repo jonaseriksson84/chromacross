@@ -18,10 +18,10 @@ function renderKeyboardHTML(gameState: Props['gameState']) {
 	let keyboardHTML = "";
 
 	for (const row of rows) {
-		keyboardHTML += '<div class="flex justify-center gap-1 mb-1">';
+		keyboardHTML += '<div class="flex justify-center gap-0.5 mb-1">';
 
 		for (const letter of row) {
-			let keyClass = "key bg-gray-700 border-2 border-gray-600 rounded px-3 py-2 text-base font-bold text-white cursor-pointer transition-all duration-200 min-w-[40px] flex justify-center items-center hover:bg-gray-600 hover:scale-105 md:px-2 md:py-1 md:text-sm";
+			let keyClass = "key bg-gray-700 border-2 border-gray-600 rounded px-2 py-2 text-sm font-bold text-white cursor-pointer transition-all duration-200 min-w-[32px] flex justify-center items-center hover:bg-gray-600 hover:scale-105";
 			
 			if (gameState.revealedLetters.includes(letter)) {
 				keyClass += " !bg-green-500 !border-green-400";
