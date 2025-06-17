@@ -17,7 +17,6 @@ import { generateDailyPuzzle } from "../utils/simplePuzzleGenerator.ts";
 const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 const puzzle = generateDailyPuzzle(today);
 
-console.log(`Server-side generated puzzle for ${today}:`, puzzle.words);
 
 // Initial game state
 const initialGameState = {
@@ -59,7 +58,7 @@ const initialGameState = {
 		</div>
 
 		<script type="module" define:vars={{ puzzle, initialGameState }}>
-			import { initializeGameClient } from "/src/scripts/gameClient.js";
+			import { initializeGameClient } from "/src/utils/gameClient.js";
 			
 			// Initialize the game with server-rendered data
 			initializeGameClient(puzzle, initialGameState);

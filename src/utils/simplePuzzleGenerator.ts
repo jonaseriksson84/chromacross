@@ -1,5 +1,8 @@
-// Simple puzzle generator for ChromaCross
-// Deterministic daily puzzle generation
+// Algorithmic puzzle generator for ChromaCross
+// Deterministic daily puzzle generation using word list
+
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 interface Puzzle {
 	puzzleId: number;
@@ -15,6 +18,14 @@ interface Puzzle {
 	};
 	uniqueLetters: string[];
 	colorMap: Record<string, string>;
+}
+
+interface Intersection {
+	word1: string;
+	word2: string;
+	letter: string;
+	word1Index: number;
+	word2Index: number;
 }
 
 // Seeded random number generator
@@ -35,29 +46,34 @@ class SeededRandom {
 	}
 }
 
-// Curated word pairs that we know work well together
-const GOOD_WORD_PAIRS = [
-	{ h: "ABOUT", v: "BOARD", letter: "B", hPos: 1, vPos: 0 },
-	{ h: "HOUSE", v: "MUSIC", letter: "U", hPos: 2, vPos: 1 },
-	{ h: "WATER", v: "LEMON", letter: "E", hPos: 3, vPos: 1 },
-	{ h: "LIGHT", v: "TIGER", letter: "T", hPos: 4, vPos: 0 },
-	{ h: "PAPER", v: "APPLE", letter: "P", hPos: 0, vPos: 1 },
-	{ h: "CHAIR", v: "HEART", letter: "H", hPos: 1, vPos: 0 },
-	{ h: "VOICE", v: "OCEAN", letter: "O", hPos: 1, vPos: 0 },
-	{ h: "PLANT", v: "LUNCH", letter: "N", hPos: 3, vPos: 2 },
-	{ h: "GRAND", v: "ARGUE", letter: "R", hPos: 2, vPos: 1 },
-	{ h: "SMART", v: "MARCH", letter: "A", hPos: 2, vPos: 1 },
-	{ h: "SPACE", v: "PEACE", letter: "A", hPos: 2, vPos: 2 },
-	{ h: "BREAD", v: "DREAM", letter: "R", hPos: 1, vPos: 1 },
-	{ h: "CLOCK", v: "CLEAN", letter: "C", hPos: 0, vPos: 0 },
-	{ h: "STAGE", v: "AGREE", letter: "G", hPos: 3, vPos: 1 },
-	{ h: "FRAME", v: "REACH", letter: "A", hPos: 2, vPos: 2 },
-	{ h: "QUICK", v: "QUIET", letter: "Q", hPos: 0, vPos: 0 },
-	{ h: "YOUTH", v: "TOUGH", letter: "U", hPos: 2, vPos: 2 },
-	{ h: "JUDGE", v: "GUESS", letter: "U", hPos: 1, vPos: 1 },
-	{ h: "PRIDE", v: "PRINT", letter: "R", hPos: 1, vPos: 1 },
-	{ h: "SHIFT", v: "SHIRT", letter: "H", hPos: 1, vPos: 1 },
-];
+// Load word list from file
+const wordListPath = path.join(process.cwd(), "data", "wordlists", "words.txt");
+const content = fs.readFileSync(wordListPath, "utf-8");
+const WORD_LIST = content
+	.trim()
+	.split("\n")
+	.map((word) => word.toLowerCase().trim())
+	.filter((word) => word.length >= 4 && word.length <= 8); // Filter for reasonable lengths
+
+function findIntersections(word1: string, word2: string): Intersection[] {
+	const intersections: Intersection[] = [];
+	
+	for (let i = 0; i < word1.length; i++) {
+		for (let j = 0; j < word2.length; j++) {
+			if (word1[i] === word2[j]) {
+				intersections.push({
+					word1,
+					word2,
+					letter: word1[i],
+					word1Index: i,
+					word2Index: j,
+				});
+			}
+		}
+	}
+	
+	return intersections;
+}
 
 function getUniqueLetters(word1: string, word2: string): string[] {
 	const letterSet = new Set([...word1.split(""), ...word2.split("")]);
@@ -103,32 +119,72 @@ function generateColorMap(
 	return colorMap;
 }
 
+function preferMiddleIntersections(intersections: Intersection[]): Intersection[] {
+	// Prefer intersections closer to the middle of both words
+	return intersections.sort((a, b) => {
+		const aWord1Middle = Math.abs(a.word1Index - (a.word1.length - 1) / 2);
+		const aWord2Middle = Math.abs(a.word2Index - (a.word2.length - 1) / 2);
+		const aScore = aWord1Middle + aWord2Middle;
+		
+		const bWord1Middle = Math.abs(b.word1Index - (b.word1.length - 1) / 2);
+		const bWord2Middle = Math.abs(b.word2Index - (b.word2.length - 1) / 2);
+		const bScore = bWord1Middle + bWord2Middle;
+		
+		return aScore - bScore;
+	});
+}
+
 export function generateDailyPuzzle(date: string): Puzzle {
 	const dateNum = Number.parseInt(date.replace(/-/g, ""));
 	const rng = new SeededRandom(dateNum);
-
-	// Select a word pair deterministically
-	const pairIndex = rng.nextInt(GOOD_WORD_PAIRS.length);
-	const pair = GOOD_WORD_PAIRS[pairIndex];
-
-	const uniqueLetters = getUniqueLetters(pair.h, pair.v);
-	const colorMap = generateColorMap(uniqueLetters, rng);
-
-	return {
-		puzzleId: dateNum,
-		date,
-		words: {
-			horizontal: pair.h,
-			vertical: pair.v,
-		},
-		intersection: {
-			letter: pair.letter,
-			horizontalIndex: pair.hPos,
-			verticalIndex: pair.vPos,
-		},
-		uniqueLetters: uniqueLetters.map((l) => l.toUpperCase()),
-		colorMap: Object.fromEntries(
-			Object.entries(colorMap).map(([k, v]) => [k.toUpperCase(), v]),
-		),
-	};
+	
+	// Try to find a valid puzzle with multiple attempts
+	const maxAttempts = 100;
+	
+	for (let attempt = 0; attempt < maxAttempts; attempt++) {
+		// Pick two random words
+		const word1Index = rng.nextInt(WORD_LIST.length);
+		const word2Index = rng.nextInt(WORD_LIST.length);
+		
+		if (word1Index === word2Index) continue; // Skip same word
+		
+		const word1 = WORD_LIST[word1Index];
+		const word2 = WORD_LIST[word2Index];
+		
+		// Find intersections
+		const intersections = findIntersections(word1, word2);
+		if (intersections.length === 0) continue;
+		
+		// Prefer middle intersections for better visual appeal
+		const sortedIntersections = preferMiddleIntersections(intersections);
+		const intersection = sortedIntersections[0];
+		
+		const uniqueLetters = getUniqueLetters(word1, word2);
+		
+		// Ensure we have enough unique letters for variety
+		if (uniqueLetters.length < 6) continue;
+		
+		const colorMap = generateColorMap(uniqueLetters, rng);
+		
+		return {
+			puzzleId: dateNum,
+			date,
+			words: {
+				horizontal: intersection.word1.toUpperCase(),
+				vertical: intersection.word2.toUpperCase(),
+			},
+			intersection: {
+				letter: intersection.letter.toUpperCase(),
+				horizontalIndex: intersection.word1Index,
+				verticalIndex: intersection.word2Index,
+			},
+			uniqueLetters: uniqueLetters.map((l) => l.toUpperCase()),
+			colorMap: Object.fromEntries(
+				Object.entries(colorMap).map(([k, v]) => [k.toUpperCase(), v]),
+			),
+		};
+	}
+	
+	// If we reach here, throw an error - the algorithm should always find a puzzle
+	throw new Error(`Failed to generate puzzle after ${maxAttempts} attempts for date ${date}`);
 }

@@ -9,7 +9,6 @@ function createEmojiMap(puzzle, gameState) {
 		emojiMap[letter] = "🟩"; // Green for all letters
 	}
 
-	console.log("Emoji mapping:", emojiMap);
 	return emojiMap;
 }
 
@@ -98,7 +97,6 @@ export async function handleShare(event, puzzle, gameState) {
 			button.classList.add("bg-blue-500");
 		}, 2000);
 	} catch (error) {
-		console.error("Failed to copy to clipboard:", error);
 		// Fallback: show the text in an alert or prompt
 		prompt("Copy this text to share your results:", shareText);
 	}

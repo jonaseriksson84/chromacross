@@ -5,9 +5,7 @@ export const MAX_INCORRECT_GUESSES = 6;
 export function saveState(gameState) {
 	try {
 		localStorage.setItem("chromaCrossState", JSON.stringify(gameState));
-		console.log("Game state saved");
 	} catch (error) {
-		console.error("Failed to save game state:", error);
 	}
 }
 
@@ -15,23 +13,19 @@ export function loadState(puzzleId) {
 	try {
 		const savedStateString = localStorage.getItem("chromaCrossState");
 		if (!savedStateString) {
-			console.log("No saved state found");
-			return null;
+				return null;
 		}
 
 		const savedState = JSON.parse(savedStateString);
 
 		// Check if the saved state matches current puzzle ID
 		if (savedState.puzzleId !== puzzleId) {
-			console.log("Saved state is for a different puzzle, discarding");
 			localStorage.removeItem("chromaCrossState");
 			return null;
 		}
 
-		console.log("Valid saved state found, loading...");
 		return savedState;
 	} catch (error) {
-		console.error("Failed to load game state:", error);
 		// Clear corrupted data
 		localStorage.removeItem("chromaCrossState");
 		return null;
@@ -80,14 +74,12 @@ export function checkGameStatus(gameState, puzzle) {
 	// Win condition: all unique letters have been revealed
 	if (gameState.revealedLetters.length === puzzle.uniqueLetters.length) {
 		gameState.status = "WON";
-		console.log("Player wins!");
 		return;
 	}
 
 	// Loss condition: too many incorrect guesses
 	if (gameState.incorrectGuesses.length >= MAX_INCORRECT_GUESSES) {
 		gameState.status = "LOST";
-		console.log("Player loses!");
 		return;
 	}
 }

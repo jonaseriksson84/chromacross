@@ -14,13 +14,10 @@ export function initializeGameClient(puzzle, initialGameState) {
 	let gameState = initialGameState;
 
 	function initializeGame() {
-		console.log("Initializing game with server-rendered puzzle:", puzzle.puzzleId);
-
 		// Try to load saved state for this puzzle
 		const savedState = loadState(puzzle.puzzleId);
 		if (savedState) {
 			gameState = savedState;
-			console.log("Game state loaded:", gameState);
 			// Re-render with saved state
 			render(puzzle, gameState);
 		}
@@ -28,14 +25,13 @@ export function initializeGameClient(puzzle, initialGameState) {
 		// Set up event listeners
 		addEventListeners();
 		addShareEventListeners(puzzle, gameState);
-		console.log("Game initialized successfully!");
 	}
 
 	function addEventListeners() {
 		// Event delegation for keyboard clicks
 		const keyboardContainer = document.getElementById("keyboard-container");
 		if (keyboardContainer) {
-			keyboardContainer.addEventListener("click", function (event) {
+			keyboardContainer.addEventListener("click", (event) => {
 				const target = event.target;
 				if (target.classList.contains("key")) {
 					const letter = target.dataset.letter;
@@ -47,7 +43,7 @@ export function initializeGameClient(puzzle, initialGameState) {
 		}
 
 		// Physical keyboard support
-		document.addEventListener("keydown", function (event) {
+		document.addEventListener("keydown", (event) => {
 			const letter = event.key.toUpperCase();
 			if (letter.match(/[A-Z]/)) {
 				handleGuessWrapper(letter);
@@ -60,21 +56,21 @@ export function initializeGameClient(puzzle, initialGameState) {
 		const showResultsButton = document.getElementById("show-results-button");
 
 		if (closeWinModal) {
-			closeWinModal.addEventListener("click", function () {
+			closeWinModal.addEventListener("click", () => {
 				closeModal(gameState);
 				render(puzzle, gameState);
 			});
 		}
 
 		if (closeLossModal) {
-			closeLossModal.addEventListener("click", function () {
+			closeLossModal.addEventListener("click", () => {
 				closeModal(gameState);
 				render(puzzle, gameState);
 			});
 		}
 
 		if (showResultsButton) {
-			showResultsButton.addEventListener("click", function () {
+			showResultsButton.addEventListener("click", () => {
 				showResultsModal(puzzle, gameState);
 			});
 		}
@@ -102,7 +98,7 @@ export function initializeGameClient(puzzle, initialGameState) {
 	}
 
 	// Initialize when DOM is ready
-	if (document.readyState === 'loading') {
+	if (document.readyState === "loading") {
 		document.addEventListener("DOMContentLoaded", initializeGame);
 	} else {
 		initializeGame();
