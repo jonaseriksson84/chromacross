@@ -1,14 +1,27 @@
 ---
-import GameGrid from '../components/GameGrid.astro';
-import ColorPalette from '../components/ColorPalette.astro';
-import VirtualKeyboard from '../components/VirtualKeyboard.astro';
-import GameModals from '../components/GameModals.astro';
-import '../styles/global.css';
+import GameGrid from "../components/GameGrid.astro";
+import ColorPalette from "../components/ColorPalette.astro";
+import VirtualKeyboard from "../components/VirtualKeyboard.astro";
+import GameModals from "../components/GameModals.astro";
+import GameHeader from "../components/GameHeader.astro";
+import ShowResultsButton from "../components/ShowResultsButton.astro";
+import GuessCounter from "../components/GuessCounter.astro";
+import "../styles/global.css";
 
-// Puzzle will be fetched from API
-// Initial game state - will be updated after puzzle fetch
+// This makes the page server-rendered so we can fetch fresh puzzles
+export const prerender = false;
+
+// Generate today's puzzle on the server - runs on every request
+import { generateDailyPuzzle } from "../utils/simplePuzzleGenerator.ts";
+
+const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+const puzzle = generateDailyPuzzle(today);
+
+console.log(`Server-side generated puzzle for ${today}:`, puzzle.words);
+
+// Initial game state
 const initialGameState = {
-	puzzleId: 0,
+	puzzleId: puzzle.puzzleId,
 	revealedLetters: [],
 	incorrectGuesses: [],
 	status: "IN_PROGRESS",
@@ -23,195 +36,33 @@ const initialGameState = {
 		<meta name="generator" content={Astro.generator} />
 		<title>ChromaCross</title>
 	</head>
-	<body class="bg-gray-900 text-white min-h-screen flex justify-center items-center p-3">
-		<div id="game-container" class="w-full max-w-sm sm:max-w-md flex flex-col gap-6 text-center">
-			<header>
-				<h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-red-400 via-accent-blue via-blue-400 to-green-400 bg-clip-text text-transparent md:text-3xl">ChromaCross</h1>
-			</header>
+	<body
+		class="bg-gray-900 text-white min-h-screen flex justify-center items-center p-3"
+	>
+		<div
+			id="game-container"
+			class="w-full max-w-sm sm:max-w-md flex flex-col gap-6 text-center"
+		>
+			<GameHeader />
+			<ShowResultsButton />
 
-			<button id="show-results-button" class="bg-blue-500 text-gray-900 border-0 rounded-lg px-6 py-3 text-base font-bold cursor-pointer transition-all duration-200 hover:bg-blue-400 hover:scale-105 active:scale-95 hidden mb-4">Puzzle Completed - Show Results</button>
-
-			<div id="loading-state" class="text-center text-gray-400">
-				<p>Loading today's puzzle...</p>
-			</div>
-
-			<div id="error-state" class="text-center text-red-400 hidden">
-				<p>Failed to load puzzle. Please try refreshing.</p>
-			</div>
-
-			<div id="game-content" class="flex flex-col gap-6 hidden">
-				<div id="grid-container" class="bg-gray-800 rounded-lg p-4 w-full flex justify-center items-center border-2 border-gray-700">
-					<!-- Grid will be populated by JavaScript -->
-				</div>
+			<div id="game-content" class="flex flex-col gap-6">
+				<GameGrid puzzle={puzzle} gameState={initialGameState} />
 				
-				<div class="bg-gray-800 rounded-lg p-4 border-2 border-gray-700">
-					<div id="guess-counter" class="text-center text-lg">
-						Remaining guesses: <span id="remaining-count" class="font-bold text-blue-400">6</span>
-					</div>
-					<div class="border-t border-gray-600 my-3"></div>
-					<div id="palette-container">
-						<!-- Palette will be populated by JavaScript -->
-					</div>
-				</div>
-				<div id="keyboard-container" class="flex flex-col gap-2">
-					<!-- Keyboard will be populated by JavaScript -->
-				</div>
+				<GuessCounter>
+					<ColorPalette puzzle={puzzle} gameState={initialGameState} />
+				</GuessCounter>
+				
+				<VirtualKeyboard gameState={initialGameState} />
 			</div>
 			<GameModals />
 		</div>
 
-		<script>
-			import { 
-				handleGuess, 
-				saveState, 
-				loadState, 
-				render, 
-				shakeElement,
-				closeModal,
-				showResultsModal
-			} from '../utils/gameLogic.js';
-			import { addShareEventListeners } from '../utils/shareUtils.js';
-
-			// Global variables
-			let puzzle = null;
-			let gameState = null;
-
-			// Fetch puzzle from API
-			async function fetchPuzzle() {
-				try {
-					console.log('Fetching puzzle from API...');
-					const response = await fetch('/api/puzzle/today');
-					if (!response.ok) {
-						throw new Error(`HTTP error! status: ${response.status}`);
-					}
-					const puzzleData = await response.json();
-					console.log('Puzzle fetched successfully:', puzzleData);
-					return puzzleData;
-				} catch (error) {
-					console.error('Failed to fetch puzzle:', error);
-					throw error;
-				}
-			}
-
-			// Initialize game with puzzle data
-			function initializeGame(puzzleData) {
-				console.log('Initializing game with puzzle:', puzzleData.puzzleId);
-				puzzle = puzzleData;
-				
-				// Initialize game state
-				gameState = {
-					puzzleId: puzzle.puzzleId,
-					revealedLetters: [],
-					incorrectGuesses: [],
-					status: "IN_PROGRESS",
-				};
-
-				// Try to load saved state for this puzzle
-				const savedState = loadState(puzzle.puzzleId);
-				if (savedState) {
-					gameState = savedState;
-					console.log("Game state loaded:", gameState);
-				}
-
-				// Show game content, hide loading state
-				console.log('Showing game content...');
-				document.getElementById('loading-state').classList.add('hidden');
-				document.getElementById('game-content').classList.remove('hidden');
-
-				// Set up event listeners and render
-				addEventListeners();
-				addShareEventListeners(puzzle, gameState);
-				render(puzzle, gameState);
-				console.log('Game initialized successfully!');
-			}
-
-			// Show error state
-			function showError() {
-				document.getElementById('loading-state').classList.add('hidden');
-				document.getElementById('error-state').classList.remove('hidden');
-			}
-
-			// Main initialization
-			document.addEventListener("DOMContentLoaded", async function () {
-				try {
-					const puzzleData = await fetchPuzzle();
-					initializeGame(puzzleData);
-				} catch (error) {
-					console.error('Failed to initialize game:', error);
-					showError();
-				}
-			});
-
-			function addEventListeners(): void {
-				// Event delegation for keyboard clicks
-				const keyboardContainer = document.getElementById("keyboard-container");
-				if (keyboardContainer) {
-					keyboardContainer.addEventListener("click", function (event: Event) {
-						const target = event.target as HTMLElement;
-						if (target.classList.contains("key")) {
-							const letter = (target as HTMLButtonElement).dataset.letter;
-							if (letter) {
-								handleGuessWrapper(letter);
-							}
-						}
-					});
-				}
-
-				// Optional: Add physical keyboard support
-				document.addEventListener("keydown", function (event: KeyboardEvent) {
-					const letter = event.key.toUpperCase();
-					if (letter.match(/[A-Z]/)) {
-						handleGuessWrapper(letter);
-					}
-				});
-
-				// Add event listeners for modal close buttons
-				const closeWinModal = document.getElementById("close-win-modal");
-				const closeLossModal = document.getElementById("close-loss-modal");
-				const showResultsButton = document.getElementById("show-results-button");
-
-				if (closeWinModal) {
-					closeWinModal.addEventListener("click", function() {
-						closeModal(gameState);
-						render(puzzle, gameState);
-					});
-				}
-
-				if (closeLossModal) {
-					closeLossModal.addEventListener("click", function() {
-						closeModal(gameState);
-						render(puzzle, gameState);
-					});
-				}
-
-				if (showResultsButton) {
-					showResultsButton.addEventListener("click", function() {
-						showResultsModal(puzzle, gameState);
-					});
-				}
-			}
-
-			function handleGuessWrapper(letter: string): void {
-				const result = handleGuess(letter, puzzle, gameState);
-				
-				if (result.shouldShake) {
-					// Provide feedback (brief shake or highlight)
-					shakeElement(document.querySelector(`[data-letter="${letter}"]`));
-					return;
-				}
-
-				// Update game state
-				gameState = result.gameState;
-
-				// Save state after every valid move
-				saveState(gameState);
-
-				// Re-render the UI
-				render(puzzle, gameState);
-
-				// Update share event listeners with new game state
-				addShareEventListeners(puzzle, gameState);
-			}
+		<script type="module" define:vars={{ puzzle, initialGameState }}>
+			import { initializeGameClient } from "/src/scripts/gameClient.js";
+			
+			// Initialize the game with server-rendered data
+			initializeGameClient(puzzle, initialGameState);
 		</script>
 	</body>
 </html>
