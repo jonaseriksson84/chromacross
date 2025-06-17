@@ -27,23 +27,37 @@ try {
   WORD_LIST = ['about', 'water', 'board', 'round', 'table', 'house', 'plant', 'light', 'great', 'world'];
 }
 
-// Find intersections for a word
-function findIntersections(word1, wordList) {
+// Find intersections for a word (prioritize middle positions for better visual appeal)
+function findIntersections(word1, wordList, preferMiddle = true) {
   const intersections = [];
+  const middleIntersections = [];
+  
   for (let pos1 = 0; pos1 < 5; pos1++) {
     const letter = word1[pos1];
     for (const word2 of wordList) {
       if (word2 === word1) continue;
       for (let pos2 = 0; pos2 < 5; pos2++) {
         if (word2[pos2] === letter) {
-          intersections.push({
+          const intersection = {
             word1, word2, letter, word1_pos: pos1, word2_pos: pos2
-          });
+          };
+          
+          // Separate middle intersections (positions 1, 2, 3 for both words)
+          const isMiddle1 = pos1 >= 1 && pos1 <= 3;
+          const isMiddle2 = pos2 >= 1 && pos2 <= 3;
+          
+          if (preferMiddle && isMiddle1 && isMiddle2) {
+            middleIntersections.push(intersection);
+          } else {
+            intersections.push(intersection);
+          }
         }
       }
     }
   }
-  return intersections;
+  
+  // Return middle intersections first if we have them, otherwise all intersections
+  return middleIntersections.length > 0 ? middleIntersections : intersections;
 }
 
 // Get unique letters from two words

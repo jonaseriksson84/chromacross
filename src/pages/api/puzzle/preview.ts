@@ -25,33 +25,65 @@ try {
   WORD_LIST = ['about', 'water', 'board', 'round', 'table', 'house', 'plant', 'light', 'great', 'world'];
 }
 
-// Simplified puzzle generation for preview
+// Find intersections (same logic as today.ts)
+function findIntersections(word1, wordList, preferMiddle = true) {
+  const intersections = [];
+  const middleIntersections = [];
+  
+  for (let pos1 = 0; pos1 < 5; pos1++) {
+    const letter = word1[pos1];
+    for (const word2 of wordList) {
+      if (word2 === word1) continue;
+      for (let pos2 = 0; pos2 < 5; pos2++) {
+        if (word2[pos2] === letter) {
+          const intersection = {
+            word1, word2, letter, word1_pos: pos1, word2_pos: pos2
+          };
+          
+          const isMiddle1 = pos1 >= 1 && pos1 <= 3;
+          const isMiddle2 = pos2 >= 1 && pos2 <= 3;
+          
+          if (preferMiddle && isMiddle1 && isMiddle2) {
+            middleIntersections.push(intersection);
+          } else {
+            intersections.push(intersection);
+          }
+        }
+      }
+    }
+  }
+  
+  return middleIntersections.length > 0 ? middleIntersections : intersections;
+}
+
+// Improved puzzle generation for preview
 function generatePreviewPuzzle(date: string) {
   const epochDate = new Date(date).getTime() / (1000 * 60 * 60 * 24);
   const daysSinceEpoch = Math.floor(epochDate);
   const rng = new SeededRandom(daysSinceEpoch * 2654435761);
   
-  // Quick generation - just pick two random words that intersect
+  // Try to generate with middle intersections
   for (let attempt = 0; attempt < 100; attempt++) {
     const word1 = WORD_LIST[rng.nextInt(WORD_LIST.length)];
-    const word2 = WORD_LIST[rng.nextInt(WORD_LIST.length)];
+    const intersections = findIntersections(word1, WORD_LIST.slice(0, 500)); // Limit for performance
     
-    if (word1 === word2) continue;
-    
-    // Find any intersection
-    for (let i = 0; i < 5; i++) {
-      for (let j = 0; j < 5; j++) {
-        if (word1[i] === word2[j]) {
-          const uniqueLetters = Array.from(new Set([...word1, ...word2])).sort();
-          return {
-            date,
-            words: { horizontal: word1.toUpperCase(), vertical: word2.toUpperCase() },
-            intersection: { letter: word1[i].toUpperCase(), horizontalIndex: i, verticalIndex: j },
-            uniqueLetters: uniqueLetters.map(l => l.toUpperCase()),
-            letterCount: uniqueLetters.length
-          };
-        }
-      }
+    if (intersections.length > 0) {
+      const intersection = intersections[rng.nextInt(intersections.length)];
+      const uniqueLetters = Array.from(new Set([...intersection.word1, ...intersection.word2])).sort();
+      
+      return {
+        date,
+        words: { horizontal: intersection.word1.toUpperCase(), vertical: intersection.word2.toUpperCase() },
+        intersection: { 
+          letter: intersection.letter.toUpperCase(), 
+          horizontalIndex: intersection.word1_pos, 
+          verticalIndex: intersection.word2_pos 
+        },
+        uniqueLetters: uniqueLetters.map(l => l.toUpperCase()),
+        letterCount: uniqueLetters.length,
+        isMiddleIntersection: (intersection.word1_pos >= 1 && intersection.word1_pos <= 3) && 
+                            (intersection.word2_pos >= 1 && intersection.word2_pos <= 3)
+      };
     }
   }
   
