@@ -1,4 +1,6 @@
 import type { APIRoute } from 'astro';
+
+export const prerender = false;
 import fs from 'fs';
 import path from 'path';
 
