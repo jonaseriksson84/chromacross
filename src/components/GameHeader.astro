@@ -8,8 +8,8 @@
 	
 	<!-- Main title -->
 	<h1 class="relative text-5xl md:text-6xl font-black tracking-tight text-center">
-		<!-- Primary gradient text -->
-		<span class="block bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-red-500 bg-clip-text text-transparent animate-gradient bg-300% filter drop-shadow-lg">
+		<!-- Primary gradient text with Tailwind pulse animation -->
+		<span class="block bg-gradient-to-r from-fuchsia-500 via-cyan-400 via-emerald-400 to-red-500 bg-clip-text text-transparent filter drop-shadow-lg animate-pulse">
 			ChromaCross
 		</span>
 		
@@ -21,17 +21,3 @@
 	
 </header>
 
-<style>
-	@keyframes gradient {
-		0%, 100% { background-position: 0% 50%; }
-		50% { background-position: 100% 50%; }
-	}
-	
-	.animate-gradient {
-		animation: gradient 4s ease infinite;
-	}
-	
-	.bg-300% {
-		background-size: 300% 300%;
-	}
-</style>
