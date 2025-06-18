@@ -40,8 +40,8 @@ export function handleGuess(letter, puzzle, gameState) {
 		return { gameState, shouldShake: false };
 	}
 
-	// Sanitize input
-	if (!letter || !letter.match(/[A-Z]/)) {
+	// Sanitize input - only accept single uppercase letters A-Z
+	if (!letter || !letter.match(/^[A-Z]$/)) {
 		return { gameState, shouldShake: false };
 	}
 

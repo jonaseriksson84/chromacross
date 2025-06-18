@@ -104,14 +104,13 @@ describe('Game Logic', () => {
       }
     });
 
-    it('should handle multi-character strings by treating them as incorrect guesses', () => {
-      // The regex /[A-Z]/ matches any string containing uppercase letters
-      // So "AB" will be processed as a guess, not ignored
+    it('should ignore multi-character strings', () => {
+      // The regex /^[A-Z]$/ only matches single uppercase letters
+      // So "AB" should be ignored, not processed as a guess
       const result = handleGuess('AB', mockPuzzle, initialGameState);
       
       expect(result.shouldShake).toBe(false);
-      expect(result.gameState.incorrectGuesses).toContain('AB');
-      expect(result.gameState.revealedLetters).not.toContain('AB');
+      expect(result.gameState).toBe(initialGameState); // Should be unchanged
     });
 
     it('should not accept guesses when game is won', () => {
@@ -313,6 +312,32 @@ describe('Game Logic', () => {
       
       expect(result.shouldShake).toBe(false);
       expect(result.gameState).toBe(initialGameState); // No change
+    });
+
+    it('should ignore special keys and modifier keys', () => {
+      // Test common special keys that users might press
+      const specialKeys = [
+        'Shift', 'Alt', 'Control', 'Meta', 'Tab', 'Escape', 'Enter',
+        'Backspace', 'Delete', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight',
+        'F1', 'F2', 'F3', 'CapsLock', 'NumLock', 'ScrollLock'
+      ];
+      
+      for (const key of specialKeys) {
+        const result = handleGuess(key, mockPuzzle, initialGameState);
+        expect(result.shouldShake).toBe(false);
+        expect(result.gameState).toBe(initialGameState); // Should be unchanged
+      }
+    });
+
+    it('should ignore numbers and symbols', () => {
+      // Test numbers and common symbols
+      const invalidChars = ['0', '1', '2', '9', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '+', '=', '[', ']', '{', '}', '|', '\\', ':', ';', '"', "'", '<', '>', ',', '.', '?', '/'];
+      
+      for (const char of invalidChars) {
+        const result = handleGuess(char, mockPuzzle, initialGameState);
+        expect(result.shouldShake).toBe(false);
+        expect(result.gameState).toBe(initialGameState); // Should be unchanged
+      }
     });
   });
 });
