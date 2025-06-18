@@ -25,12 +25,14 @@ export function initializeHowToPlayModal() {
 	// Show modal
 	function showModal() {
 		modal.classList.remove('hidden');
+		modal.classList.add('flex');
 		document.body.style.overflow = 'hidden'; // Prevent background scrolling
 	}
 
 	// Hide modal
 	function hideModal() {
 		modal.classList.add('hidden');
+		modal.classList.remove('flex');
 		document.body.style.overflow = ''; // Restore scrolling
 	}
 

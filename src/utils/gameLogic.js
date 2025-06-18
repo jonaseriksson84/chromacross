@@ -293,7 +293,9 @@ export function renderGameStatus(puzzle, gameState) {
 		"true";
 
 	winModal.classList.add("hidden");
+	winModal.classList.remove("flex");
 	lossModal.classList.add("hidden");
+	lossModal.classList.remove("flex");
 
 	if (showResultsButton) {
 		if (isGameFinished && modalWasClosed) {
@@ -318,6 +320,7 @@ export function renderGameStatus(puzzle, gameState) {
 		// Show modal if not manually closed
 		if (!modalWasClosed) {
 			winModal.classList.remove("hidden");
+			winModal.classList.add("flex");
 		}
 	} else if (gameState.status === "LOST") {
 		// Update loss stats
@@ -335,6 +338,7 @@ export function renderGameStatus(puzzle, gameState) {
 		// Show modal if not manually closed
 		if (!modalWasClosed) {
 			lossModal.classList.remove("hidden");
+			lossModal.classList.add("flex");
 		}
 	}
 }
@@ -344,7 +348,9 @@ export function closeModal(gameState) {
 	const lossModal = document.getElementById("loss-message");
 
 	winModal.classList.add("hidden");
+	winModal.classList.remove("flex");
 	lossModal.classList.add("hidden");
+	lossModal.classList.remove("flex");
 
 	// Remember that the modal was closed for this puzzle
 	localStorage.setItem(
