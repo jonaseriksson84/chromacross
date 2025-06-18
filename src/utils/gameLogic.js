@@ -158,39 +158,44 @@ export function renderPalette(puzzle, gameState) {
 	const colors = Object.entries(puzzle.colorMap);
 	const totalColors = colors.length;
 
-	// Calculate optimal rows for compact layout
-	const itemsPerRow = 3; // 3 items per row for better mobile fit
+	// Always split into exactly 2 rows
+	const itemsPerRow = Math.ceil(totalColors / 2);
 
 	const paletteWrapper = document.createElement("div");
 	paletteWrapper.className = "space-y-2";
 
-	// Split colors into rows
-	for (let i = 0; i < totalColors; i += itemsPerRow) {
-		const row = colors.slice(i, i + itemsPerRow);
-		const rowDiv = document.createElement("div");
-		rowDiv.className = "flex gap-2 justify-center items-center";
+	// Create exactly 2 rows
+	for (let rowIndex = 0; rowIndex < 2; rowIndex++) {
+		const startIndex = rowIndex * itemsPerRow;
+		const endIndex = Math.min(startIndex + itemsPerRow, totalColors);
+		const row = colors.slice(startIndex, endIndex);
+		
+		if (row.length > 0) {
+			const rowDiv = document.createElement("div");
+			rowDiv.className = "flex gap-2 justify-center items-center";
 
-		for (const [letter, color] of row) {
-			const colorItem = document.createElement("div");
-			colorItem.className = "flex items-center gap-1 text-sm";
+			for (const [letter, color] of row) {
+				const colorItem = document.createElement("div");
+				colorItem.className = "flex items-center gap-1 text-sm";
 
-			const colorCircle = document.createElement("div");
-			colorCircle.className = "w-4 h-4 rounded-full border border-gray-500";
-			colorCircle.style.backgroundColor = color;
+				const colorCircle = document.createElement("div");
+				colorCircle.className = "w-4 h-4 rounded-full border border-gray-500";
+				colorCircle.style.backgroundColor = color;
 
-			const letterSpan = document.createElement("span");
-			letterSpan.textContent = gameState.revealedLetters.includes(letter)
-				? letter
-				: "?";
-			letterSpan.className = "font-bold text-xs min-w-[12px]";
+				const letterSpan = document.createElement("span");
+				letterSpan.textContent = gameState.revealedLetters.includes(letter)
+					? letter
+					: "?";
+				letterSpan.className = "font-bold text-xs min-w-[12px]";
 
-			colorItem.appendChild(colorCircle);
-			colorItem.appendChild(document.createTextNode(" = "));
-			colorItem.appendChild(letterSpan);
+				colorItem.appendChild(colorCircle);
+				colorItem.appendChild(document.createTextNode(" = "));
+				colorItem.appendChild(letterSpan);
 
-			rowDiv.appendChild(colorItem);
+				rowDiv.appendChild(colorItem);
+			}
+			paletteWrapper.appendChild(rowDiv);
 		}
-		paletteWrapper.appendChild(rowDiv);
 	}
 
 	paletteContainer.appendChild(paletteWrapper);
@@ -210,16 +215,16 @@ export function renderKeyboard(gameState) {
 
 	for (const row of rows) {
 		const rowDiv = document.createElement("div");
-		rowDiv.className = "flex justify-center gap-0.5 mb-1";
+		rowDiv.className = "flex justify-center gap-1 mb-1";
 
 		for (const letter of row) {
 			const key = document.createElement("button");
 			key.textContent = letter;
 			key.dataset.letter = letter;
 
-			// Base Tailwind classes
+			// Base Tailwind classes with consistent sizing
 			let keyClass =
-				"key bg-gray-700 border-2 border-gray-600 rounded px-2 py-2 text-sm font-bold text-white cursor-pointer transition-all duration-200 min-w-[32px] flex justify-center items-center hover:bg-gray-600 hover:scale-105";
+				"key bg-gray-700 border-2 border-gray-600 rounded py-3 px-3 text-sm font-bold text-white cursor-pointer transition-all duration-200 min-w-[36px] flex justify-center items-center hover:bg-gray-600 hover:scale-105";
 
 			// Set key state based on game state
 			if (gameState.revealedLetters.includes(letter)) {
@@ -238,10 +243,22 @@ export function renderKeyboard(gameState) {
 
 export function renderGuessCounter(gameState) {
 	const remainingCountElement = document.getElementById("remaining-count");
+	const guessCounterElement = document.getElementById("guess-counter");
+	const dividerElement = document.getElementById("guess-counter-divider");
+	
 	if (!remainingCountElement) return;
 
 	const remaining = MAX_INCORRECT_GUESSES - gameState.incorrectGuesses.length;
 	remainingCountElement.textContent = remaining;
+	
+	// Hide guess counter and divider when game is over
+	if (gameState.status === "WON" || gameState.status === "LOST") {
+		if (guessCounterElement) guessCounterElement.style.display = "none";
+		if (dividerElement) dividerElement.style.display = "none";
+	} else {
+		if (guessCounterElement) guessCounterElement.style.display = "block";
+		if (dividerElement) dividerElement.style.display = "block";
+	}
 
 	// Add warning styling when getting low
 	remainingCountElement.classList.remove("text-red-400");

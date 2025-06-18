@@ -1,14 +1,19 @@
 ---
-// Counter showing remaining guesses
+// Counter showing remaining guesses with help button
 ---
 
-<div class="bg-gray-800 rounded-lg p-4 border-2 border-gray-700">
+<div class="bg-gray-800 rounded-lg p-4 border-2 border-gray-700 relative">
+	<!-- Help button in top right -->
+	<button id="show-how-to-play" class="absolute top-3 right-3 w-6 h-6 bg-gray-600 hover:bg-gray-500 rounded-full flex items-center justify-center text-white text-sm font-bold transition-colors" title="How to play">
+		?
+	</button>
+	
 	<div id="guess-counter" class="text-center text-lg">
 		Remaining guesses: <span
 			id="remaining-count"
 			class="font-bold text-blue-400">6</span
 		>
 	</div>
-	<div class="border-t border-gray-600 my-3"></div>
+	<div id="guess-counter-divider" class="border-t border-gray-600 my-3"></div>
 	<slot />
 </div>

@@ -17,28 +17,33 @@ function renderPaletteHTML(
 	const colors = Object.entries(puzzle.colorMap);
 	const totalColors = colors.length;
 
-	// Calculate optimal rows for compact layout
-	const itemsPerRow = 3; // 3 items per row for better mobile fit
+	// Always split into exactly 2 rows
+	const itemsPerRow = Math.ceil(totalColors / 2);
 
 	let paletteHTML = '<div class="space-y-2">';
 
-	// Split colors into rows
-	for (let i = 0; i < totalColors; i += itemsPerRow) {
-		const row = colors.slice(i, i + itemsPerRow);
-		paletteHTML += '<div class="flex gap-2 justify-center items-center">';
+	// Create exactly 2 rows
+	for (let rowIndex = 0; rowIndex < 2; rowIndex++) {
+		const startIndex = rowIndex * itemsPerRow;
+		const endIndex = Math.min(startIndex + itemsPerRow, totalColors);
+		const row = colors.slice(startIndex, endIndex);
+		
+		if (row.length > 0) {
+			paletteHTML += '<div class="flex gap-2 justify-center items-center">';
 
-		for (const [letter, color] of row) {
-			const displayLetter = gameState.revealedLetters.includes(letter)
-				? letter
-				: "?";
-			paletteHTML += `
-				<div class="flex items-center gap-1 text-sm">
-					<div class="w-4 h-4 rounded-full border border-gray-500" style="background-color: ${color};"></div>
-					= <span class="font-bold text-xs min-w-[12px]">${displayLetter}</span>
-				</div>
-			`;
+			for (const [letter, color] of row) {
+				const displayLetter = gameState.revealedLetters.includes(letter)
+					? letter
+					: "?";
+				paletteHTML += `
+					<div class="flex items-center gap-1 text-sm">
+						<div class="w-4 h-4 rounded-full border border-gray-500" style="background-color: ${color};"></div>
+						= <span class="font-bold text-xs min-w-[12px]">${displayLetter}</span>
+					</div>
+				`;
+			}
+			paletteHTML += "</div>";
 		}
-		paletteHTML += "</div>";
 	}
 
 	paletteHTML += "</div>";

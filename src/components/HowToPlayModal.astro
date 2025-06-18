@@ -1,0 +1,80 @@
+---
+// How to Play modal component
+---
+
+<div
+	id="how-to-play-modal"
+	class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+>
+	<div
+		class="bg-gray-800 rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto border-2 border-gray-600"
+	>
+		<!-- Header -->
+		<div class="flex justify-between items-center p-6 border-b border-gray-600">
+			<div class="w-8"></div> <!-- Spacer for balance -->
+			<h2
+				class="text-2xl font-bold bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-emerald-400 bg-clip-text text-transparent text-center"
+			>
+				How to Play ChromaCross
+			</h2>
+			<button
+				id="close-how-to-play"
+				class="text-gray-400 hover:text-white transition-colors text-2xl font-bold w-8 h-8 flex items-center justify-center"
+			>
+				×
+			</button>
+		</div>
+
+		<!-- Content -->
+		<div class="p-6 space-y-4 text-sm leading-relaxed">
+			<div class="space-y-3">
+				<h3 class="font-bold text-lg text-blue-400">🎯 Goal</h3>
+				<p>
+					Guess all the letters in the crossword puzzle. Two words intersect at
+					one letter!
+				</p>
+			</div>
+
+			<div class="space-y-3">
+				<h3 class="font-bold text-lg text-green-400">🎮 How to Play</h3>
+				<ul
+					class="space-y-2 list-disc list-outside ml-4 text-gray-300 text-left"
+				>
+					<li>Click letters on the keyboard or type on your keyboard</li>
+					<li>Each color represents a different letter</li>
+					<li>Correct letters will appear in the puzzle</li>
+					<li>Wrong letters turn gray on the keyboard</li>
+					<li>You have 6 wrong guesses before losing</li>
+				</ul>
+			</div>
+
+			<div class="space-y-3">
+				<h3 class="font-bold text-lg text-yellow-400">💡 Tips</h3>
+				<ul
+					class="space-y-2 list-disc list-outside ml-4 text-gray-300 text-left"
+				>
+					<li>Start with common vowels (A, E, I, O, U)</li>
+					<li>The intersection letter appears in both words</li>
+					<li>Use the color palette to track your progress</li>
+					<li>Think about word patterns and common letter combinations</li>
+				</ul>
+			</div>
+
+			<div class="bg-gray-700 rounded-lg p-4 mt-6">
+				<p class="text-center text-gray-300 text-xs">
+					🎉 New puzzle every day! Come back tomorrow for a fresh challenge.
+				</p>
+			</div>
+		</div>
+
+		<!-- Footer -->
+		<div class="p-6 border-t border-gray-600">
+			<button
+				id="got-it-button"
+				class="w-full bg-gradient-to-r from-fuchsia-500 to-cyan-400 text-white font-bold py-3 px-6 rounded-lg hover:from-fuchsia-600 hover:to-cyan-500 transition-all duration-200"
+			>
+				Got it! Let's play 🚀
+			</button>
+		</div>
+	</div>
+</div>

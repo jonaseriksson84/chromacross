@@ -6,6 +6,7 @@ import GameModals from "../components/GameModals.astro";
 import GameHeader from "../components/GameHeader.astro";
 import ShowResultsButton from "../components/ShowResultsButton.astro";
 import GuessCounter from "../components/GuessCounter.astro";
+import HowToPlayModal from "../components/HowToPlayModal.astro";
 import "../styles/global.css";
 
 // This makes the page server-rendered so we can fetch fresh puzzles
@@ -46,15 +47,16 @@ const initialGameState = {
 			<ShowResultsButton />
 
 			<div id="game-content" class="flex flex-col gap-6">
-				<GameGrid puzzle={puzzle} gameState={initialGameState} />
-				
 				<GuessCounter>
 					<ColorPalette puzzle={puzzle} gameState={initialGameState} />
 				</GuessCounter>
 				
+				<GameGrid puzzle={puzzle} gameState={initialGameState} />
+				
 				<VirtualKeyboard gameState={initialGameState} />
 			</div>
 			<GameModals />
+			<HowToPlayModal />
 		</div>
 
 		<script type="module" define:vars={{ puzzle, initialGameState }}>

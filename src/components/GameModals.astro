@@ -3,22 +3,48 @@
 ---
 
 <!-- Win/Loss Message Modals -->
-<div id="win-message" class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 hidden">
-	<div class="bg-gray-800 rounded-xl p-8 max-w-md w-[90%] text-center border-2 border-gray-600 relative">
-		<button id="close-win-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-700 transition-colors">×</button>
+<div
+	id="win-message"
+	class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50"
+>
+	<div
+		class="bg-gray-800 rounded-xl p-8 max-w-md w-[90%] text-center border-2 border-gray-600 relative"
+	>
+		<button
+			id="close-win-modal"
+			class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-700 transition-colors"
+			>x</button
+		>
 		<h2 class="mb-4 text-2xl">🎉 Congratulations!</h2>
 		<p class="mb-4 leading-relaxed">You solved today's ChromaCross!</p>
 		<div id="win-stats"></div>
-		<button id="share-button-win" class="bg-blue-500 text-gray-900 border-0 rounded-lg px-6 py-3 text-base font-bold cursor-pointer transition-all duration-200 mt-4 hover:bg-blue-400 hover:scale-105 active:scale-95">Share Results</button>
+		<button
+			id="share-button-win"
+			class="bg-blue-500 text-gray-900 border-0 rounded-lg px-6 py-3 text-base font-bold cursor-pointer transition-all duration-200 mt-4 hover:bg-blue-400 hover:scale-105 active:scale-95"
+			>Share Results</button
+		>
 	</div>
 </div>
 
-<div id="loss-message" class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50 hidden">
-	<div class="bg-gray-800 rounded-xl p-8 max-w-md w-[90%] text-center border-2 border-gray-600 relative">
-		<button id="close-loss-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-700 transition-colors">×</button>
+<div
+	id="loss-message"
+	class="fixed inset-0 bg-black bg-opacity-80 flex justify-center items-center z-50"
+>
+	<div
+		class="bg-gray-800 rounded-xl p-8 max-w-md w-[90%] text-center border-2 border-gray-600 relative"
+	>
+		<button
+			id="close-loss-modal"
+			class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-700 transition-colors"
+			>x</button
+		>
 		<h2 class="mb-4 text-2xl">😔 Game Over</h2>
 		<p class="mb-4 leading-relaxed">Better luck tomorrow!</p>
 		<div id="loss-stats"></div>
-		<button id="share-button-loss" class="bg-blue-500 text-gray-900 border-0 rounded-lg px-6 py-3 text-base font-bold cursor-pointer transition-all duration-200 mt-4 hover:bg-blue-400 hover:scale-105 active:scale-95">Share Results</button>
+		<button
+			id="share-button-loss"
+			class="bg-blue-500 text-gray-900 border-0 rounded-lg px-6 py-3 text-base font-bold cursor-pointer transition-all duration-200 mt-4 hover:bg-blue-400 hover:scale-105 active:scale-95"
+			>Share Results</button
+		>
 	</div>
 </div>

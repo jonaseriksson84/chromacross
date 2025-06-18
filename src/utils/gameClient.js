@@ -8,6 +8,7 @@ import {
 	showResultsModal,
 } from "/src/utils/gameLogic.js";
 import { addShareEventListeners } from "/src/utils/shareUtils.js";
+import { initializeHowToPlayModal } from "/src/utils/howToPlayModal.js";
 
 // Initialize the game client
 export function initializeGameClient(puzzle, initialGameState) {
@@ -25,6 +26,9 @@ export function initializeGameClient(puzzle, initialGameState) {
 		// Set up event listeners
 		addEventListeners();
 		addShareEventListeners(puzzle, gameState);
+		
+		// Initialize how-to-play modal
+		initializeHowToPlayModal();
 	}
 
 	function addEventListeners() {

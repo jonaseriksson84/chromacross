@@ -1,11 +1,37 @@
 ---
-// Simple header component for the game title
+// Chroma-themed header component with dynamic styling
 ---
 
-<header>
-	<h1
-		class="text-4xl font-bold mb-4 bg-gradient-to-r from-red-400 via-accent-blue via-blue-400 to-green-400 bg-clip-text text-transparent md:text-3xl"
-	>
-		ChromaCross
+<header class="relative mb-6">
+	<!-- Background glow effect -->
+	<div class="absolute inset-0 bg-gradient-to-r from-purple-600/20 via-pink-500/20 to-emerald-500/20 blur-2xl rounded-full scale-110 animate-pulse"></div>
+	
+	<!-- Main title -->
+	<h1 class="relative text-5xl md:text-6xl font-black tracking-tight text-center">
+		<!-- Primary gradient text -->
+		<span class="block bg-gradient-to-r from-fuchsia-500 via-cyan-400 to-red-500 bg-clip-text text-transparent animate-gradient bg-300% filter drop-shadow-lg">
+			ChromaCross
+		</span>
+		
+		<!-- Subtle shadow/outline effect -->
+		<span class="absolute inset-0 bg-gradient-to-r from-fuchsia-600 via-cyan-500 to-red-600 bg-clip-text text-transparent blur-sm opacity-50 -z-10">
+			ChromaCross
+		</span>
 	</h1>
+	
 </header>
+
+<style>
+	@keyframes gradient {
+		0%, 100% { background-position: 0% 50%; }
+		50% { background-position: 100% 50%; }
+	}
+	
+	.animate-gradient {
+		animation: gradient 4s ease infinite;
+	}
+	
+	.bg-300% {
+		background-size: 300% 300%;
+	}
+</style>
