@@ -1,19 +1,25 @@
 {
-  "name": "adorable-asteroid",
-  "type": "module",
-  "version": "0.0.1",
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "astro": "astro"
-  },
-  "dependencies": {
-    "astro": "^5.9.3"
-  },
-  "devDependencies": {
-    "@tailwindcss/typography": "^0.5.16",
-    "@tailwindcss/vite": "^4.1.10",
-    "tailwindcss": "^4.1.10"
-  }
+	"name": "chromacross",
+	"type": "module",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "astro dev",
+		"build": "astro build",
+		"preview": "astro preview",
+		"astro": "astro",
+		"test": "vitest",
+		"test:ui": "vitest --ui",
+		"test:run": "vitest run",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"astro": "^5.9.3"
+	},
+	"devDependencies": {
+		"@tailwindcss/typography": "^0.5.16",
+		"@tailwindcss/vite": "^4.1.10",
+		"@vitest/ui": "^3.2.4",
+		"tailwindcss": "^4.1.10",
+		"vitest": "^3.2.4"
+	}
 }

@@ -4,7 +4,7 @@
 import * as fs from "node:fs";
 import * as path from "node:path";
 
-interface Puzzle {
+export interface Puzzle {
 	puzzleId: number;
 	date: string;
 	words: {
@@ -20,7 +20,7 @@ interface Puzzle {
 	colorMap: Record<string, string>;
 }
 
-interface Intersection {
+export interface Intersection {
 	word1: string;
 	word2: string;
 	letter: string;
@@ -29,7 +29,7 @@ interface Intersection {
 }
 
 // Seeded random number generator
-class SeededRandom {
+export class SeededRandom {
 	private seed: number;
 
 	constructor(seed: number) {

@@ -1,6 +1,7 @@
 // Game constants
 export const MAX_INCORRECT_GUESSES = 6;
 
+
 // State persistence functions
 export function saveState(gameState) {
 	try {
