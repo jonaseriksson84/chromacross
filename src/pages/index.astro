@@ -62,6 +62,10 @@ const initialGameState = {
 		<script type="module" define:vars={{ puzzle, initialGameState }}>
 			import { initializeGameClient } from "/src/utils/gameClient.js";
 			
+			// Make puzzle data available globally for e2e testing
+			window.puzzle = puzzle;
+			window.gameState = initialGameState;
+			
 			// Initialize the game with server-rendered data
 			initializeGameClient(puzzle, initialGameState);
 		</script>

@@ -10,14 +10,18 @@
 		"test": "vitest",
 		"test:ui": "vitest --ui",
 		"test:run": "vitest run",
+		"test:e2e": "playwright test",
+		"test:e2e:ui": "playwright test --ui",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"astro": "^5.9.3"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.53.1",
 		"@tailwindcss/typography": "^0.5.16",
 		"@tailwindcss/vite": "^4.1.10",
+		"@vitest/coverage-v8": "^3.2.4",
 		"@vitest/ui": "^3.2.4",
 		"tailwindcss": "^4.1.10",
 		"vitest": "^3.2.4"
