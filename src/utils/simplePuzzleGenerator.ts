@@ -1,8 +1,7 @@
 // Algorithmic puzzle generator for ChromaCross
 // Deterministic daily puzzle generation using word list
 
-import * as fs from "node:fs";
-import * as path from "node:path";
+import { WORD_LIST as IMPORTED_WORD_LIST } from "../data/wordList.js";
 
 export interface Puzzle {
 	puzzleId: number;
@@ -46,14 +45,8 @@ export class SeededRandom {
 	}
 }
 
-// Load word list from file
-const wordListPath = path.join(process.cwd(), "data", "wordlists", "words.txt");
-const content = fs.readFileSync(wordListPath, "utf-8");
-const WORD_LIST = content
-	.trim()
-	.split("\n")
-	.map((word) => word.toLowerCase().trim())
-	.filter((word) => word.length >= 4 && word.length <= 8); // Filter for reasonable lengths
+// Use imported word list and filter for reasonable lengths
+const WORD_LIST = IMPORTED_WORD_LIST.filter((word) => word.length >= 4 && word.length <= 8);
 
 function findIntersections(word1: string, word2: string): Intersection[] {
 	const intersections: Intersection[] = [];
