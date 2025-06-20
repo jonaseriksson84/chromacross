@@ -6,9 +6,9 @@ import {
 	shakeElement,
 	closeModal,
 	showResultsModal,
-} from "/src/utils/gameLogic.js";
-import { addShareEventListeners } from "/src/utils/shareUtils.js";
-import { initializeHowToPlayModal } from "/src/utils/howToPlayModal.js";
+} from "./gameLogic.js";
+import { addShareEventListeners } from "./shareUtils.js";
+import { initializeHowToPlayModal } from "./howToPlayModal.js";
 
 // Initialize the game client
 export function initializeGameClient(puzzle, initialGameState) {
