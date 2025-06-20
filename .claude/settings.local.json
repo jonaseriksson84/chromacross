@@ -22,7 +22,10 @@
       "Bash(find:*)",
       "Bash(npm run test:e2e:*)",
       "Bash(pnpm run test:*)",
-      "Bash(pnpm run:*)"
+      "Bash(pnpm run:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(wrangler dev:*)",
+      "Bash(wrangler deploy:*)"
     ],
     "deny": []
   }

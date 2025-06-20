@@ -30,3 +30,9 @@ playwright/.cache/
 
 # vitest cache
 .vitest/
+
+# wrangler cache and temp files
+.wrangler/
+
+# temporary client files (moved to public)
+src/client/

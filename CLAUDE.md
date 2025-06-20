@@ -1,0 +1,2 @@
+- Never commit without making sure everything is working as expected. Check in with the user first.
+- Never add co-authored or attribution to Claude when committing, in messages or elsewhere.

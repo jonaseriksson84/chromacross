@@ -11,6 +11,9 @@ importers:
       '@astrojs/cloudflare':
         specifier: ^12.6.0
         version: 12.6.0(@types/node@24.0.3)(astro@5.10.0(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.44.0)(typescript@5.8.3))(jiti@2.4.2)(lightningcss@1.30.1)
+      '@cloudflare/kv-asset-handler':
+        specifier: ^0.4.0
+        version: 0.4.0
       astro:
         specifier: ^5.9.3
         version: 5.10.0(@types/node@24.0.3)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.44.0)(typescript@5.8.3)

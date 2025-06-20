@@ -1,14 +1,18 @@
 {
   "name": "chromacross",
-  "main": "./dist/_worker.js/index.js",
-  // Update to today's date
-  "compatibility_date": "2025-06-20",
+  "main": "./dist/_worker.js",
+  "compatibility_date": "2025-03-25",
   "compatibility_flags": ["nodejs_compat"],
-  "assets": {
-    "binding": "ASSETS",
-    "directory": "./dist"
-  },
   "observability": {
     "enabled": true
-  }
+  },
+  "assets": {
+    "directory": "./dist"
+  },
+  "routes": [
+    {
+      "pattern": "chromacross.app",
+      "custom_domain": true
+    }
+  ]
 }
