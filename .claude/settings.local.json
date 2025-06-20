@@ -25,7 +25,10 @@
       "Bash(pnpm run:*)",
       "WebFetch(domain:github.com)",
       "Bash(wrangler dev:*)",
-      "Bash(wrangler deploy:*)"
+      "Bash(wrangler deploy:*)",
+      "Bash(git rebase:*)",
+      "Bash(git filter-branch:*)",
+      "Bash(git reset:*)"
     ],
     "deny": []
   }
