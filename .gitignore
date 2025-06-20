@@ -12,6 +12,11 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# test coverage and reports
+coverage/
+test-results/
+playwright-report/
+playwright/.cache/
 
 # environment variables
 .env
@@ -22,3 +27,6 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# vitest cache
+.vitest/

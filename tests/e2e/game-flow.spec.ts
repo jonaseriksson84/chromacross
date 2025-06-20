@@ -64,7 +64,8 @@ test.describe("ChromaCross Game Flow", () => {
 
 		// Make some guesses - one correct, one incorrect
 		const correctLetter = puzzleData.uniqueLetters[0]; // First letter from puzzle
-		const incorrectLetter = "Z"; // Assuming Z is not in most puzzles
+		// Find a letter that's definitely not in the puzzle
+		const incorrectLetter = "QWXY".split("").find(letter => !puzzleData.uniqueLetters.includes(letter)) || "Q";
 
 		console.log(`Making correct guess: ${correctLetter}`);
 		await page.keyboard.press(correctLetter);
@@ -192,9 +193,18 @@ test.describe("ChromaCross Game Flow", () => {
 			expect(currentCount).toBe(initialCount);
 		}
 
+		// Get puzzle data to find an incorrect letter
+		const puzzleData = await page.evaluate(() => {
+			// @ts-ignore - accessing global variable set by the game
+			return window.puzzle;
+		});
+
+		// Find a letter that's definitely not in the puzzle
+		const incorrectLetter = "QWXY".split("").find(letter => !puzzleData.uniqueLetters.includes(letter)) || "Q";
+
 		// Now make one actual incorrect guess to verify the counter does work
-		console.log("Making actual incorrect guess: Z");
-		await page.keyboard.press("Z");
+		console.log(`Making actual incorrect guess: ${incorrectLetter}`);
+		await page.keyboard.press(incorrectLetter);
 
 		// Verify guess count decreased by 1
 		const finalRemainingGuesses = await page
@@ -204,9 +214,9 @@ test.describe("ChromaCross Game Flow", () => {
 
 		expect(finalCount).toBe(initialCount - 1);
 
-		// Verify Z key shows as incorrect in keyboard
-		const zKey = page.locator('[data-letter="Z"]');
-		await expect(zKey).toHaveClass(/bg-gray-500/);
+		// Verify incorrect key shows as incorrect in keyboard
+		const incorrectKey = page.locator(`[data-letter="${incorrectLetter}"]`);
+		await expect(incorrectKey).toHaveClass(/!bg-gray-500/);
 
 		console.log("Input validation test completed successfully!");
 	});
