@@ -56,6 +56,9 @@ export function handleGuess(letter, puzzle, gameState) {
 	// Create new state to avoid mutation
 	const newGameState = { ...gameState };
 
+	// Track all guesses in order for analytics
+	newGameState.guessSequence = [...(gameState.guessSequence || []), letter];
+
 	// Check if letter is in puzzle
 	if (puzzle.uniqueLetters.includes(letter)) {
 		// Correct guess
@@ -75,12 +78,14 @@ export function checkGameStatus(gameState, puzzle) {
 	// Win condition: all unique letters have been revealed
 	if (gameState.revealedLetters.length === puzzle.uniqueLetters.length) {
 		gameState.status = "WON";
+		sendAnalytics(gameState, puzzle, "won");
 		return;
 	}
 
 	// Loss condition: too many incorrect guesses
 	if (gameState.incorrectGuesses.length >= MAX_INCORRECT_GUESSES) {
 		gameState.status = "LOST";
+		sendAnalytics(gameState, puzzle, "lost");
 		return;
 	}
 }
@@ -371,4 +376,32 @@ export function render(puzzle, gameState) {
 	renderKeyboard(gameState);
 	renderGuessCounter(gameState);
 	renderGameStatus(puzzle, gameState);
+}
+
+// Analytics tracking
+function sendAnalytics(gameState, puzzle, outcome) {
+	try {
+		const analyticsData = {
+			puzzleId: puzzle.puzzleId,
+			outcome: outcome,
+			totalGuesses: gameState.guessSequence.length,
+			incorrectGuesses: gameState.incorrectGuesses.length,
+			guessSequence: gameState.guessSequence,
+			timestamp: Date.now()
+		};
+
+		// Send to analytics endpoint (fire and forget)
+		fetch('/api/analytics', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(analyticsData)
+		}).catch(() => {
+			// Silently fail - analytics shouldn't break the game
+		});
+
+	} catch (error) {
+		// Silently fail - analytics shouldn't break the game
+	}
 }

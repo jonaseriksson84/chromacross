@@ -28,7 +28,9 @@
       "Bash(wrangler deploy:*)",
       "Bash(git rebase:*)",
       "Bash(git filter-branch:*)",
-      "Bash(git reset:*)"
+      "Bash(git reset:*)",
+      "Bash(wrangler kv:namespace create:*)",
+      "Bash(wrangler kv namespace create:*)"
     ],
     "deny": []
   }

@@ -14,5 +14,11 @@
       "pattern": "chromacross.app",
       "custom_domain": true
     }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "ANALYTICS_KV",
+      "id": "3f8a4dde7fb44acaad24874308cad145"
+    }
   ]
 }

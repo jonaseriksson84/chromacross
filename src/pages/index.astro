@@ -15,15 +15,15 @@ export const prerender = false;
 // Generate today's puzzle on the server - runs on every request
 import { generateDailyPuzzle } from "../utils/simplePuzzleGenerator.ts";
 
-const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
 const puzzle = generateDailyPuzzle(today);
-
 
 // Initial game state
 const initialGameState = {
 	puzzleId: puzzle.puzzleId,
 	revealedLetters: [],
 	incorrectGuesses: [],
+	guessSequence: [], // Track order of all guesses for analytics
 	status: "IN_PROGRESS",
 };
 ---
@@ -50,22 +50,21 @@ const initialGameState = {
 				<GuessCounter>
 					<ColorPalette puzzle={puzzle} gameState={initialGameState} />
 				</GuessCounter>
-				
+
 				<GameGrid puzzle={puzzle} gameState={initialGameState} />
-				
+
 				<VirtualKeyboard gameState={initialGameState} />
 			</div>
 			<GameModals />
 			<HowToPlayModal />
 		</div>
 
-		<script type="module" define:vars={{ puzzle, initialGameState }}>
-			import { initializeGameClient } from "/js/gameClient.js";
-			
+		<script define:vars={{ puzzle, initialGameState }}>
+			// Make puzzle data available globally for e2e testing
 			window.puzzle = puzzle;
 			window.gameState = initialGameState;
-			
-			initializeGameClient(puzzle, initialGameState);
 		</script>
+
+		<script src="../scripts/init.js"></script>
 	</body>
 </html>

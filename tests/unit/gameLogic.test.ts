@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach } from 'vitest';
 
 // Note: We're testing the pure logic functions, not the DOM manipulation or localStorage parts
 // Import the actual functions from gameLogic.js for testing
-import { handleGuess, checkGameStatus, MAX_INCORRECT_GUESSES } from '../../src/utils/gameLogic.js';
+import { handleGuess, checkGameStatus, MAX_INCORRECT_GUESSES } from '../../src/scripts/gameLogic.js';
 import type { Puzzle } from '../../src/utils/simplePuzzleGenerator.ts';
 import type { GameState } from '../../src/types/game.ts';
 
