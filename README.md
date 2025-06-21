@@ -1,6 +1,6 @@
 # ChromaCross
 
-A daily color-coded crossword puzzle game where players guess letters to reveal intersecting words through their unique colors.
+A daily color-coded crossword puzzle game where players guess letters to reveal intersecting words through their unique colors. Try it out at [https://chromacross.app](https://chromacross.app)
 
 ## 🎮 How to Play
 
