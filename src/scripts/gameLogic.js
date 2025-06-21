@@ -1,5 +1,5 @@
 // Game constants
-export const MAX_INCORRECT_GUESSES = 6;
+export const MAX_INCORRECT_GUESSES = 8;
 
 
 // State persistence functions

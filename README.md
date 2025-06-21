@@ -8,8 +8,8 @@ Each day, everyone gets the same puzzle: two 5-letter words that intersect at on
 
 - **Click letters** on the virtual keyboard or **type on your keyboard**
 - **Correct guesses** reveal the letter's color on the grid and in the color palette
-- **Wrong guesses** count against your 6-attempt limit
-- **Win** by revealing all unique letters, **lose** by making 6 incorrect guesses
+- **Wrong guesses** count against your 8-attempt limit
+- **Win** by revealing all unique letters, **lose** by making 8 incorrect guesses
 
 ## 🚀 Features
 

@@ -152,13 +152,13 @@ describe('Game Logic', () => {
     it('should trigger loss when max incorrect guesses reached', () => {
       const almostLostState = {
         ...initialGameState,
-        incorrectGuesses: ['B', 'C', 'D', 'F', 'G'] // 5 incorrect guesses
+        incorrectGuesses: ['B', 'C', 'D', 'F', 'G', 'I', 'J'] // 7 incorrect guesses
       };
       
       const result = handleGuess('H', mockPuzzle, almostLostState);
       
       expect(result.gameState.status).toBe('LOST');
-      expect(result.gameState.incorrectGuesses).toHaveLength(6);
+      expect(result.gameState.incorrectGuesses).toHaveLength(8);
     });
   });
 
@@ -177,7 +177,7 @@ describe('Game Logic', () => {
     it('should detect loss condition when max incorrect guesses reached', () => {
       const gameState = {
         ...initialGameState,
-        incorrectGuesses: ['B', 'C', 'D', 'F', 'G', 'H'] // 6 incorrect guesses
+        incorrectGuesses: ['B', 'C', 'D', 'F', 'G', 'H', 'I', 'J'] // 8 incorrect guesses
       };
       
       checkGameStatus(gameState, mockPuzzle);
@@ -232,8 +232,8 @@ describe('Game Logic', () => {
     it('should handle a complete losing game', () => {
       let currentState = { ...initialGameState };
       
-      // Guess 6 incorrect letters
-      const incorrectLetters = ['B', 'C', 'D', 'F', 'G', 'H'];
+      // Guess 8 incorrect letters
+      const incorrectLetters = ['B', 'C', 'D', 'F', 'G', 'H', 'I', 'J'];
       
       for (const letter of incorrectLetters) {
         const result = handleGuess(letter, mockPuzzle, currentState);
@@ -242,7 +242,7 @@ describe('Game Logic', () => {
       }
       
       expect(currentState.status).toBe('LOST');
-      expect(currentState.incorrectGuesses).toHaveLength(6);
+      expect(currentState.incorrectGuesses).toHaveLength(8);
     });
 
     it('should handle mixed correct and incorrect guesses', () => {

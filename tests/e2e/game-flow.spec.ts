@@ -121,7 +121,7 @@ test.describe("ChromaCross Game Flow", () => {
 		const remainingGuesses = await page
 			.locator("#remaining-count")
 			.textContent();
-		expect(Number.parseInt(remainingGuesses || "6")).toBe(5); // Started with 6, made 1 incorrect
+		expect(Number.parseInt(remainingGuesses || "8")).toBe(7); // Started with 8, made 1 incorrect
 
 		console.log("Game state persistence verified successfully!");
 	});
@@ -140,7 +140,7 @@ test.describe("ChromaCross Game Flow", () => {
 		const initialRemainingGuesses = await page
 			.locator("#remaining-count")
 			.textContent();
-		const initialCount = Number.parseInt(initialRemainingGuesses || "6");
+		const initialCount = Number.parseInt(initialRemainingGuesses || "8");
 
 		console.log(`Initial remaining guesses: ${initialCount}`);
 
@@ -172,7 +172,7 @@ test.describe("ChromaCross Game Flow", () => {
 			const currentRemainingGuesses = await page
 				.locator("#remaining-count")
 				.textContent();
-			const currentCount = Number.parseInt(currentRemainingGuesses || "6");
+			const currentCount = Number.parseInt(currentRemainingGuesses || "8");
 
 			expect(currentCount).toBe(initialCount);
 		}
@@ -188,7 +188,7 @@ test.describe("ChromaCross Game Flow", () => {
 			const currentRemainingGuesses = await page
 				.locator("#remaining-count")
 				.textContent();
-			const currentCount = Number.parseInt(currentRemainingGuesses || "6");
+			const currentCount = Number.parseInt(currentRemainingGuesses || "8");
 
 			expect(currentCount).toBe(initialCount);
 		}
@@ -210,7 +210,7 @@ test.describe("ChromaCross Game Flow", () => {
 		const finalRemainingGuesses = await page
 			.locator("#remaining-count")
 			.textContent();
-		const finalCount = Number.parseInt(finalRemainingGuesses || "6");
+		const finalCount = Number.parseInt(finalRemainingGuesses || "8");
 
 		expect(finalCount).toBe(initialCount - 1);
 

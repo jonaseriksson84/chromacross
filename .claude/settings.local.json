@@ -30,7 +30,8 @@
       "Bash(git filter-branch:*)",
       "Bash(git reset:*)",
       "Bash(wrangler kv:namespace create:*)",
-      "Bash(wrangler kv namespace create:*)"
+      "Bash(wrangler kv namespace create:*)",
+      "Bash(npm test)"
     ],
     "deny": []
   }
