@@ -12,22 +12,32 @@ ChromaCross generates one unique puzzle per day that all players worldwide recei
 - **Deterministic generation** - Same date = same puzzle worldwide
 - **Unique solutions** - No other word pairs can be formed with the same letters
 
+## Current Implementation
+
+The game currently uses a curated word list of **2,875 common English words** sourced from:
+- Wordle official answer lists
+- Google's most common 5-letter words
+- Stanford Graph Base curated words
+
+All words are familiar, everyday English words with no proper nouns or archaic terms.
+
 ## Word List Curation
 
-### Sources (in priority order):
-1. **Wordle word lists** - ~2500 common 5-letter words, proven familiar to players
-2. **Filtered SOWPODS** - Remove obscure/archaic words, keep common ones
-3. **Frequency-ranked dictionaries** - Use only top ~3000 most common 5-letter words
+### Sources (implemented):
+1. **Wordle word lists** - Official Wordle answers (2,309 words)
+2. **Google common words** - High-frequency words from Google's corpus (1,382 words)
+3. **Stanford Graph Base** - Academically curated list (5,757 words)
 
-### Filtering criteria:
+### Filtering criteria (applied):
 - English words only
 - No proper nouns
 - No archaic/obsolete terms
 - No highly technical jargon
-- Prefer words with good letter diversity (avoid AAAAA-style words)
-- Include plurals only if they're more common than singular
+- Exactly 5 letters
+- Alphabetic characters only
+- Priority scoring based on source quality
 
-### Target size: ~3000 curated common words
+### Current word list: 2,875 curated common words
 
 ## Daily Puzzle Generation Algorithm
 
@@ -178,12 +188,27 @@ With ~3000 common 5-letter words:
 - **After filtering**: ~0.1% pass uniqueness test = 45,000 valid puzzles
 - **Sustainability**: 45,000 ÷ 365 days = **123 years** of daily puzzles
 
-## Implementation Timeline
+## Implementation Status
 
-1. **Phase 1**: Curate word list from Wordle + common SOWPODS words
-2. **Phase 2**: Implement basic generation algorithm without uniqueness check
-3. **Phase 3**: Add uniqueness validation logic
-4. **Phase 4**: Add caching and optimization
-5. **Phase 5**: Deploy with fallback mechanisms and monitoring
+### ✅ Completed Features:
+1. **Word list curation** - 2,875 high-quality words from multiple sources
+2. **Basic generation algorithm** - Date-seeded puzzle generation
+3. **Deterministic puzzle creation** - Same puzzle for all players daily
+4. **Color assignment** - Unique colors for each letter
+5. **Game state management** - Progress persistence with localStorage
+6. **Analytics system** - Anonymous gameplay tracking in Cloudflare KV
 
-This algorithm ensures ChromaCross can provide unique, fair, and engaging puzzles for decades while maintaining consistent quality and player experience.
+### 🔄 Current Implementation:
+The game uses a **simplified approach** that generates consistent daily puzzles without full uniqueness validation. The algorithm prioritizes:
+- **Reliability** - Always generates a valid puzzle
+- **Consistency** - Same puzzle worldwide
+- **Quality** - Only uses curated, familiar words
+- **Performance** - Fast generation and serving
+
+### 🎯 Future Enhancements:
+- Full uniqueness validation for puzzle ambiguity checking
+- Advanced difficulty balancing based on analytics
+- Expanded word list with regional variants
+- Puzzle pre-generation and caching
+
+This implementation ensures ChromaCross provides engaging daily puzzles with excellent performance and reliability while maintaining room for algorithmic improvements.
