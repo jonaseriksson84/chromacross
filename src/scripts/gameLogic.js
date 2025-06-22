@@ -104,6 +104,7 @@ export function renderGrid(puzzle, gameState) {
 	const gridContainer = document.getElementById("grid-container");
 	if (!gridContainer) return;
 
+	// Clear only the grid content, not the entire container
 	gridContainer.innerHTML = "";
 
 	const horizontal = puzzle.words.horizontal;
@@ -272,14 +273,6 @@ export function renderGuessCounter(gameState) {
 	if (remaining <= 2 && remaining > 0) {
 		remainingCountElement.classList.remove("text-blue-400");
 		remainingCountElement.classList.add("text-red-400");
-	}
-
-	// Hide the counter when game is over
-	const guessCounter = document.getElementById("guess-counter");
-	if (gameState.status !== "IN_PROGRESS") {
-		guessCounter.style.display = "none";
-	} else {
-		guessCounter.style.display = "inline-block";
 	}
 }
 

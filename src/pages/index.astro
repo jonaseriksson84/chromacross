@@ -1,11 +1,9 @@
 ---
 import GameGrid from "../components/GameGrid.astro";
-import ColorPalette from "../components/ColorPalette.astro";
 import VirtualKeyboard from "../components/VirtualKeyboard.astro";
 import GameModals from "../components/GameModals.astro";
 import GameHeader from "../components/GameHeader.astro";
 import ShowResultsButton from "../components/ShowResultsButton.astro";
-import GuessCounter from "../components/GuessCounter.astro";
 import HowToPlayModal from "../components/HowToPlayModal.astro";
 import "../styles/global.css";
 
@@ -47,10 +45,6 @@ const initialGameState = {
 			<ShowResultsButton />
 
 			<div id="game-content" class="flex flex-col gap-6">
-				<GuessCounter>
-					<ColorPalette puzzle={puzzle} gameState={initialGameState} />
-				</GuessCounter>
-
 				<GameGrid puzzle={puzzle} gameState={initialGameState} />
 
 				<VirtualKeyboard gameState={initialGameState} />
