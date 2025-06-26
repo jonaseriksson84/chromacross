@@ -75,7 +75,7 @@ export function generateShareText(puzzle, gameState) {
 		);
 	}
 
-	return `${title}\n${summary}\n${gridText}\n#ChromaCross`;
+	return `${title}\n${summary}\n${gridText}`;
 }
 
 export async function handleShare(event, puzzle, gameState) {
